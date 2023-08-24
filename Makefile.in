@@ -100,7 +100,7 @@ host_triplet = @host@
 target_triplet = @target@
 @HAVE_LD_VERSION_SCRIPT_TRUE@am__append_1 = -Wl,--version-script=$(srcdir)/libjpeg.map
 bin_PROGRAMS = cjpeg$(EXEEXT) djpeg$(EXEEXT) jpegtran$(EXEEXT) \
-	rdjpgcom$(EXEEXT) wrjpgcom$(EXEEXT)
+	rdjpgcom$(EXEEXT) wrjpgcom$(EXEEXT) mtest$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -168,7 +168,7 @@ libjpeg_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(libjpeg_la_LDFLAGS) $(LDFLAGS) -o $@
 am_cjpeg_OBJECTS = cjpeg.$(OBJEXT) rdppm.$(OBJEXT) rdgif.$(OBJEXT) \
 	rdtarga.$(OBJEXT) rdrle.$(OBJEXT) rdbmp.$(OBJEXT) \
-	rdswitch.$(OBJEXT) cdjpeg.$(OBJEXT)
+	rdswitch.$(OBJEXT) cdjpeg.$(OBJEXT) majapeg.$(OBJEXT)
 cjpeg_OBJECTS = $(am_cjpeg_OBJECTS)
 cjpeg_DEPENDENCIES = libjpeg.la
 am_djpeg_OBJECTS = djpeg.$(OBJEXT) wrppm.$(OBJEXT) wrgif.$(OBJEXT) \
@@ -180,6 +180,9 @@ am_jpegtran_OBJECTS = jpegtran.$(OBJEXT) rdswitch.$(OBJEXT) \
 	cdjpeg.$(OBJEXT) transupp.$(OBJEXT)
 jpegtran_OBJECTS = $(am_jpegtran_OBJECTS)
 jpegtran_DEPENDENCIES = libjpeg.la
+am_mtest_OBJECTS = test.$(OBJEXT)
+mtest_OBJECTS = $(am_mtest_OBJECTS)
+mtest_LDADD = $(LDADD)
 am_rdjpgcom_OBJECTS = rdjpgcom.$(OBJEXT)
 rdjpgcom_OBJECTS = $(am_rdjpgcom_OBJECTS)
 rdjpgcom_LDADD = $(LDADD)
@@ -226,11 +229,12 @@ am__depfiles_remade = ./$(DEPDIR)/@MEMORYMGR@.Plo \
 	./$(DEPDIR)/jidctfst.Plo ./$(DEPDIR)/jidctint.Plo \
 	./$(DEPDIR)/jmemmgr.Plo ./$(DEPDIR)/jpegtran.Po \
 	./$(DEPDIR)/jquant1.Plo ./$(DEPDIR)/jquant2.Plo \
-	./$(DEPDIR)/jutils.Plo ./$(DEPDIR)/rdbmp.Po \
-	./$(DEPDIR)/rdcolmap.Po ./$(DEPDIR)/rdgif.Po \
-	./$(DEPDIR)/rdjpgcom.Po ./$(DEPDIR)/rdppm.Po \
-	./$(DEPDIR)/rdrle.Po ./$(DEPDIR)/rdswitch.Po \
-	./$(DEPDIR)/rdtarga.Po ./$(DEPDIR)/transupp.Po \
+	./$(DEPDIR)/jutils.Plo ./$(DEPDIR)/majapeg.Po \
+	./$(DEPDIR)/rdbmp.Po ./$(DEPDIR)/rdcolmap.Po \
+	./$(DEPDIR)/rdgif.Po ./$(DEPDIR)/rdjpgcom.Po \
+	./$(DEPDIR)/rdppm.Po ./$(DEPDIR)/rdrle.Po \
+	./$(DEPDIR)/rdswitch.Po ./$(DEPDIR)/rdtarga.Po \
+	./$(DEPDIR)/test.Po ./$(DEPDIR)/transupp.Po \
 	./$(DEPDIR)/wrbmp.Po ./$(DEPDIR)/wrgif.Po \
 	./$(DEPDIR)/wrjpgcom.Po ./$(DEPDIR)/wrppm.Po \
 	./$(DEPDIR)/wrrle.Po ./$(DEPDIR)/wrtarga.Po
@@ -253,8 +257,27 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+AM_V_CXX = $(am__v_CXX_@AM_V@)
+am__v_CXX_ = $(am__v_CXX_@AM_DEFAULT_V@)
+am__v_CXX_0 = @echo "  CXX     " $@;
+am__v_CXX_1 = 
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
+am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
+am__v_CXXLD_0 = @echo "  CXXLD   " $@;
+am__v_CXXLD_1 = 
 SOURCES = $(libjpeg_la_SOURCES) $(cjpeg_SOURCES) $(djpeg_SOURCES) \
-	$(jpegtran_SOURCES) $(rdjpgcom_SOURCES) $(wrjpgcom_SOURCES)
+	$(jpegtran_SOURCES) $(mtest_SOURCES) $(rdjpgcom_SOURCES) \
+	$(wrjpgcom_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -300,6 +323,10 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+CXXDEPMODE = @CXXDEPMODE@
+CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -362,6 +389,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -492,8 +520,9 @@ libjpeg_la_LDFLAGS = -no-undefined -version-info $(JPEG_LIB_VERSION) \
 	$(am__append_1)
 
 # Executable sources & libs
+mtest_SOURCES = test.cpp
 cjpeg_SOURCES = cjpeg.c rdppm.c rdgif.c rdtarga.c rdrle.c rdbmp.c \
-        rdswitch.c cdjpeg.c
+        rdswitch.c cdjpeg.c majapeg.cpp
 
 cjpeg_LDADD = libjpeg.la
 djpeg_SOURCES = djpeg.c wrppm.c wrgif.c wrtarga.c wrrle.c wrbmp.c \
@@ -531,7 +560,7 @@ all: jconfig.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .c .cpp .lo .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -672,7 +701,7 @@ libjpeg.la: $(libjpeg_la_OBJECTS) $(libjpeg_la_DEPENDENCIES) $(EXTRA_libjpeg_la_
 
 cjpeg$(EXEEXT): $(cjpeg_OBJECTS) $(cjpeg_DEPENDENCIES) $(EXTRA_cjpeg_DEPENDENCIES) 
 	@rm -f cjpeg$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(cjpeg_OBJECTS) $(cjpeg_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(CXXLINK) $(cjpeg_OBJECTS) $(cjpeg_LDADD) $(LIBS)
 
 djpeg$(EXEEXT): $(djpeg_OBJECTS) $(djpeg_DEPENDENCIES) $(EXTRA_djpeg_DEPENDENCIES) 
 	@rm -f djpeg$(EXEEXT)
@@ -681,6 +710,10 @@ djpeg$(EXEEXT): $(djpeg_OBJECTS) $(djpeg_DEPENDENCIES) $(EXTRA_djpeg_DEPENDENCIE
 jpegtran$(EXEEXT): $(jpegtran_OBJECTS) $(jpegtran_DEPENDENCIES) $(EXTRA_jpegtran_DEPENDENCIES) 
 	@rm -f jpegtran$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(jpegtran_OBJECTS) $(jpegtran_LDADD) $(LIBS)
+
+mtest$(EXEEXT): $(mtest_OBJECTS) $(mtest_DEPENDENCIES) $(EXTRA_mtest_DEPENDENCIES) 
+	@rm -f mtest$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(mtest_OBJECTS) $(mtest_LDADD) $(LIBS)
 
 rdjpgcom$(EXEEXT): $(rdjpgcom_OBJECTS) $(rdjpgcom_DEPENDENCIES) $(EXTRA_rdjpgcom_DEPENDENCIES) 
 	@rm -f rdjpgcom$(EXEEXT)
@@ -746,6 +779,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jquant1.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jquant2.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jutils.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/majapeg.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdbmp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdcolmap.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdgif.Po@am__quote@ # am--include-marker
@@ -754,6 +788,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdrle.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdswitch.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rdtarga.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/transupp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wrbmp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wrgif.Po@am__quote@ # am--include-marker
@@ -788,6 +823,27 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+.cpp.o:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ $<
+
+.cpp.obj:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.cpp.lo:
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1040,6 +1096,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/jquant1.Plo
 	-rm -f ./$(DEPDIR)/jquant2.Plo
 	-rm -f ./$(DEPDIR)/jutils.Plo
+	-rm -f ./$(DEPDIR)/majapeg.Po
 	-rm -f ./$(DEPDIR)/rdbmp.Po
 	-rm -f ./$(DEPDIR)/rdcolmap.Po
 	-rm -f ./$(DEPDIR)/rdgif.Po
@@ -1048,6 +1105,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/rdrle.Po
 	-rm -f ./$(DEPDIR)/rdswitch.Po
 	-rm -f ./$(DEPDIR)/rdtarga.Po
+	-rm -f ./$(DEPDIR)/test.Po
 	-rm -f ./$(DEPDIR)/transupp.Po
 	-rm -f ./$(DEPDIR)/wrbmp.Po
 	-rm -f ./$(DEPDIR)/wrgif.Po
@@ -1153,6 +1211,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/jquant1.Plo
 	-rm -f ./$(DEPDIR)/jquant2.Plo
 	-rm -f ./$(DEPDIR)/jutils.Plo
+	-rm -f ./$(DEPDIR)/majapeg.Po
 	-rm -f ./$(DEPDIR)/rdbmp.Po
 	-rm -f ./$(DEPDIR)/rdcolmap.Po
 	-rm -f ./$(DEPDIR)/rdgif.Po
@@ -1161,6 +1220,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/rdrle.Po
 	-rm -f ./$(DEPDIR)/rdswitch.Po
 	-rm -f ./$(DEPDIR)/rdtarga.Po
+	-rm -f ./$(DEPDIR)/test.Po
 	-rm -f ./$(DEPDIR)/transupp.Po
 	-rm -f ./$(DEPDIR)/wrbmp.Po
 	-rm -f ./$(DEPDIR)/wrgif.Po

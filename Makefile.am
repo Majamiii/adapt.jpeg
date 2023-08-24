@@ -79,11 +79,12 @@ if HAVE_LD_VERSION_SCRIPT
 endif
 
 # Executables to build
-bin_PROGRAMS = cjpeg djpeg jpegtran rdjpgcom wrjpgcom
+bin_PROGRAMS = cjpeg djpeg jpegtran rdjpgcom wrjpgcom mtest
 
 # Executable sources & libs
+mtest_SOURCES = test.cpp
 cjpeg_SOURCES    = cjpeg.c rdppm.c rdgif.c rdtarga.c rdrle.c rdbmp.c \
-        rdswitch.c cdjpeg.c
+        rdswitch.c cdjpeg.c majapeg.cpp
 cjpeg_LDADD      = libjpeg.la
 djpeg_SOURCES    = djpeg.c wrppm.c wrgif.c wrtarga.c wrrle.c wrbmp.c \
         rdcolmap.c cdjpeg.c
