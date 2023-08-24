@@ -519,8 +519,8 @@ parse_switches (j_compress_ptr cinfo, int argc, char **argv,
 int
 main (int argc, char **argv)
 {
-  int retcpp = majapeg(3);
-  printf("%d\n", retcpp);
+  //int retcpp = majapeg(3);
+  //printf("%d\n", retcpp);
   struct jpeg_compress_struct cinfo;
   struct jpeg_error_mgr jerr;
 #ifdef PROGRESS_REPORT
