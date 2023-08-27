@@ -18,6 +18,9 @@
 #include "jdct.h"		/* Private declarations for DCT subsystem */
 
 
+#include <stdio.h>
+#include <stdlib.h>
+
 /* Private subobject for this module */
 
 typedef struct {
@@ -82,7 +85,10 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
   DCTELEM * divisors = (DCTELEM *) compptr->dct_table;
   DCTELEM workspace[DCTSIZE2];	/* work area for FDCT subroutine */
   JDIMENSION bi;
-
+  FILE *fptr; 
+  
+  fptr = fopen("dctcoefs.txt","a");
+    
   for (bi = 0; bi < num_blocks; bi++, start_col += compptr->DCT_h_scaled_size) {
     /* Perform the DCT */
     (*do_dct) (workspace, sample_data, start_col);
@@ -93,8 +99,14 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
       register JCOEFPTR output_ptr = coef_blocks[bi];
 
       for (i = 0; i < DCTSIZE2; i++) {
-	qval = divisors[i];
-	temp = workspace[i];
+	      qval = divisors[i];
+	      temp = workspace[i];
+  
+        fprintf(fptr, "%i\n", temp);
+        //fprintf(fptr, "%i \n", i);
+      
+  //fprintf(stderr, "%i ", temp);
+  //printf("%i",temp);
 	/* Divide the coefficient value by qval, ensuring proper rounding.
 	 * Since C does not specify the direction of rounding for negative
 	 * quotients, we have to force the dividend positive for portability.
@@ -125,6 +137,7 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
       }
     }
   }
+  fclose(fptr);
 }
 
 
