@@ -21,6 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "adaptf.h"
+
 /* Private subobject for this module */
 
 typedef struct {
@@ -142,6 +144,7 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
     }
   }
   fclose(fptr);
+  block();
 }
 
 

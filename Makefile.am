@@ -23,7 +23,7 @@ INSTINCLUDES  = jerror.h jmorecfg.h jpeglib.h
 
 # Headers which are not installed
 OTHERINCLUDES = cderror.h cdjpeg.h jdct.h jinclude.h jmemsys.h jpegint.h \
-        jversion.h transupp.h
+        jversion.h transupp.h 
 
 # Manual pages (Automake uses 'MANS' for itself)
 DISTMANS= cjpeg.1 djpeg.1 jpegtran.1 rdjpgcom.1 wrjpgcom.1
@@ -84,7 +84,7 @@ bin_PROGRAMS = cjpeg djpeg jpegtran rdjpgcom wrjpgcom mtest
 # Executable sources & libs
 mtest_SOURCES = test.cpp
 cjpeg_SOURCES    = cjpeg.c rdppm.c rdgif.c rdtarga.c rdrle.c rdbmp.c \
-        rdswitch.c cdjpeg.c majapeg.cpp
+        rdswitch.c cdjpeg.c majapeg.cpp adaptf.c
 cjpeg_LDADD      = libjpeg.la
 djpeg_SOURCES    = djpeg.c wrppm.c wrgif.c wrtarga.c wrrle.c wrbmp.c \
         rdcolmap.c cdjpeg.c
@@ -93,6 +93,8 @@ jpegtran_SOURCES = jpegtran.c rdswitch.c cdjpeg.c transupp.c
 jpegtran_LDADD   = libjpeg.la
 rdjpgcom_SOURCES = rdjpgcom.c
 wrjpgcom_SOURCES = wrjpgcom.c
+jcdctmgr_SOURCES  = adaptf.c
+jcdctmgr_LDADD  = libjpeg.la
 
 # Manual pages to install
 man_MANS = $(DISTMANS)
