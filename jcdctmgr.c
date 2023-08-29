@@ -88,15 +88,19 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
   FILE *fptr; 
   
   fptr = fopen("dctcoefs.txt","a");
+  //fprintf(stderr, "%i ", num_blocks);
     
   for (bi = 0; bi < num_blocks; bi++, start_col += compptr->DCT_h_scaled_size) {
     /* Perform the DCT */
-    (*do_dct) (workspace, sample_data, start_col);
+    (*do_dct) (workspace, sample_data, start_col); //start_col represents a number of horizontal pixels (num divisible by 4)
 
     /* Quantize/descale the coefficients, and store into coef_blocks[] */
     { register DCTELEM temp, qval;
       register int i;
       register JCOEFPTR output_ptr = coef_blocks[bi];
+
+      //fprintf(stderr, "%i ", );
+      //fprintf(stderr, "%i ", bi);
 
       for (i = 0; i < DCTSIZE2; i++) {
 	      qval = divisors[i];

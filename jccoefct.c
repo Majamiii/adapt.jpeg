@@ -168,7 +168,8 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
        * block's DC value.  (Thanks to Thomas Kinsman for this idea.)
        */
       blkp = coef->blk_buffer;	/* pointer to current DCT block within MCU */
-      for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
+      for (ci = 0; ci < cinfo->comps_in_scan; ci++) {     //ci = components(typically 3 for 3 colors)
+        //fprintf(stderr, "%i ", ci);
 	compptr = cinfo->cur_comp_info[ci];
 	forward_DCT = cinfo->fdct->forward_DCT[compptr->component_index];
 	input_ptr = input_buf[compptr->component_index] +
@@ -177,13 +178,20 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 	blockcnt = (MCU_col_num < last_MCU_col) ? compptr->MCU_width
 						: compptr->last_col_width;
 	xpos = MCU_col_num * compptr->MCU_sample_width;
+  //fprintf(stderr, "%i ", xpos);
+  int cntr = 0;
 	for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
 	  if (coef->iMCU_row_num < last_iMCU_row ||
 	      yoffset + yindex < compptr->last_row_height) {
 	    (*forward_DCT) (cinfo, compptr, input_ptr, blkp,
 			    xpos, (JDIMENSION) blockcnt);
-	    input_ptr += compptr->DCT_v_scaled_size;
+          cntr = cntr + 1;
+          //fprintf(stderr, "%i ", yindex);     //01000100010001000100...
+          //fprintf(stderr, "%i ", MCU_col_num); //10 puta uzastopno ispisuje brojeve od 0 do 14 od po 4
+          // 00001111222233334444...        za sliku testimg.bmp
+          input_ptr += compptr->DCT_v_scaled_size;
 	    blkp += blockcnt;
+      //fprintf(stderr, "%i ", blockcnt); //221122112211... sve do kraja gde ima vise jedinica
 	    /* Dummy blocks at right edge */
 	    if ((xindex = compptr->MCU_width - blockcnt) == 0)
 	      continue;
@@ -214,6 +222,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
   }
   /* Completed the iMCU row, advance counters for next one */
   coef->iMCU_row_num++;
+  //fprintf(stderr, "%i ", iMCU_row_num);
   start_iMCU_row(cinfo);
   return TRUE;
 }
@@ -282,8 +291,10 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     /* Perform DCT for all non-dummy blocks in this iMCU row.  Each call
      * on forward_DCT processes a complete horizontal row of DCT blocks.
      */
+    //fprintf(stderr, " q%i ", block_rows);
     for (block_row = 0; block_row < block_rows; block_row++) {
       thisblockrow = buffer[block_row];
+      //fprintf(stderr, "%i ", block_row);
       (*forward_DCT) (cinfo, compptr, input_ptr, thisblockrow,
 		      (JDIMENSION) 0, blocks_across);
       input_ptr += compptr->DCT_v_scaled_size;

@@ -21,7 +21,8 @@
  * for 12-bit samples.  (NOTE: Floating-point DCT implementations use an
  * array of type FAST_FLOAT, instead.)
  * The input data is to be fetched from the sample array starting at a
- * specified column.  (Any row offset needed will be applied to the array
+ * specified column.  (Any row offset needed will be 
+ * 2applied to the array
  * pointer before it is passed to the FDCT code.)
  * Note that the number of samples fetched by the FDCT routine is
  * DCT_h_scaled_size * DCT_v_scaled_size.
