@@ -522,9 +522,9 @@ main (int argc, char **argv)
   //int retcpp = forward_DCT();
   //printf("%d\n", retcpp);
 
-  FILE * fptr;
-  fptr = fopen("dctcoefs.txt","w");
-  fclose(fptr);
+  //FILE * fptr;
+  //fptr = fopen("dctcoefs.txt","w");
+  //fclose(fptr);
 
 
   struct jpeg_compress_struct cinfo;

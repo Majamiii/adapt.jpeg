@@ -87,11 +87,7 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
   DCTELEM * divisors = (DCTELEM *) compptr->dct_table;
   DCTELEM workspace[DCTSIZE2];	/* work area for FDCT subroutine */
   JDIMENSION bi;
-  FILE *fptr; 
-  
-  fptr = fopen("dctcoefs.txt","a");
-  //fprintf(stderr, "%i ", num_blocks);
-    
+
   for (bi = 0; bi < num_blocks; bi++, start_col += compptr->DCT_h_scaled_size) {
     /* Perform the DCT */
     (*do_dct) (workspace, sample_data, start_col); //start_col represents a number of horizontal pixels (num divisible by 4)
@@ -100,19 +96,27 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
     { register DCTELEM temp, qval;
       register int i;
       register JCOEFPTR output_ptr = coef_blocks[bi];
-
-      //fprintf(stderr, "%i ", );
-      //fprintf(stderr, "%i ", bi);
+      
+      float sum=0;
 
       for (i = 0; i < DCTSIZE2; i++) {
 	      qval = divisors[i];
-	      temp = workspace[i];
-  
-        fprintf(fptr, "%i\n", temp);
-        //fprintf(fptr, "%i \n", i);
-      
-  //fprintf(stderr, "%i ", temp);
-  //printf("%i",temp);
+        temp = workspace[i];
+        //temp = changed_coefs(i, temp);        //temp is scaled by x/15, now we have to find the percentage per block
+
+        float x = changed_coefs(i, temp);
+        if(x >= 0) {
+          sum += x;
+        }
+        else {
+          sum -= x;
+        }
+
+        if(i = DCTSIZE2) {
+          int percent = sum/43.69;
+          //printf("sum: %i  \n", percent*2+50);
+        }
+     
 	/* Divide the coefficient value by qval, ensuring proper rounding.
 	 * Since C does not specify the direction of rounding for negative
 	 * quotients, we have to force the dividend positive for portability.
@@ -143,8 +147,6 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
       }
     }
   }
-  fclose(fptr);
-  block();
 }
 
 
