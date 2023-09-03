@@ -93,8 +93,8 @@ jpegtran_SOURCES = jpegtran.c rdswitch.c cdjpeg.c transupp.c
 jpegtran_LDADD   = libjpeg.la
 rdjpgcom_SOURCES = rdjpgcom.c
 wrjpgcom_SOURCES = wrjpgcom.c
-jcdctmgr_SOURCES  = adaptf.c
-jcdctmgr_LDADD  = libjpeg.la
+#jcdctmgr_SOURCES  = adaptf.c
+#jcdctmgr_LDADD  = libjpeg.la
 
 # Manual pages to install
 man_MANS = $(DISTMANS)

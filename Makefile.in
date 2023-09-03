@@ -168,7 +168,8 @@ libjpeg_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(libjpeg_la_LDFLAGS) $(LDFLAGS) -o $@
 am_cjpeg_OBJECTS = cjpeg.$(OBJEXT) rdppm.$(OBJEXT) rdgif.$(OBJEXT) \
 	rdtarga.$(OBJEXT) rdrle.$(OBJEXT) rdbmp.$(OBJEXT) \
-	rdswitch.$(OBJEXT) cdjpeg.$(OBJEXT) majapeg.$(OBJEXT)
+	rdswitch.$(OBJEXT) cdjpeg.$(OBJEXT) majapeg.$(OBJEXT) \
+	adaptf.$(OBJEXT)
 cjpeg_OBJECTS = $(am_cjpeg_OBJECTS)
 cjpeg_DEPENDENCIES = libjpeg.la
 am_djpeg_OBJECTS = djpeg.$(OBJEXT) wrppm.$(OBJEXT) wrgif.$(OBJEXT) \
@@ -205,39 +206,40 @@ DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/@MEMORYMGR@.Plo \
-	./$(DEPDIR)/cdjpeg.Po ./$(DEPDIR)/cjpeg.Po \
-	./$(DEPDIR)/djpeg.Po ./$(DEPDIR)/jaricom.Plo \
-	./$(DEPDIR)/jcapimin.Plo ./$(DEPDIR)/jcapistd.Plo \
-	./$(DEPDIR)/jcarith.Plo ./$(DEPDIR)/jccoefct.Plo \
-	./$(DEPDIR)/jccolor.Plo ./$(DEPDIR)/jcdctmgr.Plo \
-	./$(DEPDIR)/jchuff.Plo ./$(DEPDIR)/jcinit.Plo \
-	./$(DEPDIR)/jcmainct.Plo ./$(DEPDIR)/jcmarker.Plo \
-	./$(DEPDIR)/jcmaster.Plo ./$(DEPDIR)/jcomapi.Plo \
-	./$(DEPDIR)/jcparam.Plo ./$(DEPDIR)/jcprepct.Plo \
-	./$(DEPDIR)/jcsample.Plo ./$(DEPDIR)/jctrans.Plo \
-	./$(DEPDIR)/jdapimin.Plo ./$(DEPDIR)/jdapistd.Plo \
-	./$(DEPDIR)/jdarith.Plo ./$(DEPDIR)/jdatadst.Plo \
-	./$(DEPDIR)/jdatasrc.Plo ./$(DEPDIR)/jdcoefct.Plo \
-	./$(DEPDIR)/jdcolor.Plo ./$(DEPDIR)/jddctmgr.Plo \
-	./$(DEPDIR)/jdhuff.Plo ./$(DEPDIR)/jdinput.Plo \
-	./$(DEPDIR)/jdmainct.Plo ./$(DEPDIR)/jdmarker.Plo \
-	./$(DEPDIR)/jdmaster.Plo ./$(DEPDIR)/jdmerge.Plo \
-	./$(DEPDIR)/jdpostct.Plo ./$(DEPDIR)/jdsample.Plo \
-	./$(DEPDIR)/jdtrans.Plo ./$(DEPDIR)/jerror.Plo \
-	./$(DEPDIR)/jfdctflt.Plo ./$(DEPDIR)/jfdctfst.Plo \
-	./$(DEPDIR)/jfdctint.Plo ./$(DEPDIR)/jidctflt.Plo \
-	./$(DEPDIR)/jidctfst.Plo ./$(DEPDIR)/jidctint.Plo \
-	./$(DEPDIR)/jmemmgr.Plo ./$(DEPDIR)/jpegtran.Po \
-	./$(DEPDIR)/jquant1.Plo ./$(DEPDIR)/jquant2.Plo \
-	./$(DEPDIR)/jutils.Plo ./$(DEPDIR)/majapeg.Po \
-	./$(DEPDIR)/rdbmp.Po ./$(DEPDIR)/rdcolmap.Po \
-	./$(DEPDIR)/rdgif.Po ./$(DEPDIR)/rdjpgcom.Po \
-	./$(DEPDIR)/rdppm.Po ./$(DEPDIR)/rdrle.Po \
-	./$(DEPDIR)/rdswitch.Po ./$(DEPDIR)/rdtarga.Po \
-	./$(DEPDIR)/test.Po ./$(DEPDIR)/transupp.Po \
-	./$(DEPDIR)/wrbmp.Po ./$(DEPDIR)/wrgif.Po \
-	./$(DEPDIR)/wrjpgcom.Po ./$(DEPDIR)/wrppm.Po \
-	./$(DEPDIR)/wrrle.Po ./$(DEPDIR)/wrtarga.Po
+	./$(DEPDIR)/adaptf.Po ./$(DEPDIR)/cdjpeg.Po \
+	./$(DEPDIR)/cjpeg.Po ./$(DEPDIR)/djpeg.Po \
+	./$(DEPDIR)/jaricom.Plo ./$(DEPDIR)/jcapimin.Plo \
+	./$(DEPDIR)/jcapistd.Plo ./$(DEPDIR)/jcarith.Plo \
+	./$(DEPDIR)/jccoefct.Plo ./$(DEPDIR)/jccolor.Plo \
+	./$(DEPDIR)/jcdctmgr.Plo ./$(DEPDIR)/jchuff.Plo \
+	./$(DEPDIR)/jcinit.Plo ./$(DEPDIR)/jcmainct.Plo \
+	./$(DEPDIR)/jcmarker.Plo ./$(DEPDIR)/jcmaster.Plo \
+	./$(DEPDIR)/jcomapi.Plo ./$(DEPDIR)/jcparam.Plo \
+	./$(DEPDIR)/jcprepct.Plo ./$(DEPDIR)/jcsample.Plo \
+	./$(DEPDIR)/jctrans.Plo ./$(DEPDIR)/jdapimin.Plo \
+	./$(DEPDIR)/jdapistd.Plo ./$(DEPDIR)/jdarith.Plo \
+	./$(DEPDIR)/jdatadst.Plo ./$(DEPDIR)/jdatasrc.Plo \
+	./$(DEPDIR)/jdcoefct.Plo ./$(DEPDIR)/jdcolor.Plo \
+	./$(DEPDIR)/jddctmgr.Plo ./$(DEPDIR)/jdhuff.Plo \
+	./$(DEPDIR)/jdinput.Plo ./$(DEPDIR)/jdmainct.Plo \
+	./$(DEPDIR)/jdmarker.Plo ./$(DEPDIR)/jdmaster.Plo \
+	./$(DEPDIR)/jdmerge.Plo ./$(DEPDIR)/jdpostct.Plo \
+	./$(DEPDIR)/jdsample.Plo ./$(DEPDIR)/jdtrans.Plo \
+	./$(DEPDIR)/jerror.Plo ./$(DEPDIR)/jfdctflt.Plo \
+	./$(DEPDIR)/jfdctfst.Plo ./$(DEPDIR)/jfdctint.Plo \
+	./$(DEPDIR)/jidctflt.Plo ./$(DEPDIR)/jidctfst.Plo \
+	./$(DEPDIR)/jidctint.Plo ./$(DEPDIR)/jmemmgr.Plo \
+	./$(DEPDIR)/jpegtran.Po ./$(DEPDIR)/jquant1.Plo \
+	./$(DEPDIR)/jquant2.Plo ./$(DEPDIR)/jutils.Plo \
+	./$(DEPDIR)/majapeg.Po ./$(DEPDIR)/rdbmp.Po \
+	./$(DEPDIR)/rdcolmap.Po ./$(DEPDIR)/rdgif.Po \
+	./$(DEPDIR)/rdjpgcom.Po ./$(DEPDIR)/rdppm.Po \
+	./$(DEPDIR)/rdrle.Po ./$(DEPDIR)/rdswitch.Po \
+	./$(DEPDIR)/rdtarga.Po ./$(DEPDIR)/test.Po \
+	./$(DEPDIR)/transupp.Po ./$(DEPDIR)/wrbmp.Po \
+	./$(DEPDIR)/wrgif.Po ./$(DEPDIR)/wrjpgcom.Po \
+	./$(DEPDIR)/wrppm.Po ./$(DEPDIR)/wrrle.Po \
+	./$(DEPDIR)/wrtarga.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -461,7 +463,7 @@ INSTINCLUDES = jerror.h jmorecfg.h jpeglib.h
 
 # Headers which are not installed
 OTHERINCLUDES = cderror.h cdjpeg.h jdct.h jinclude.h jmemsys.h jpegint.h \
-        jversion.h transupp.h
+        jversion.h transupp.h 
 
 
 # Manual pages (Automake uses 'MANS' for itself)
@@ -522,7 +524,7 @@ libjpeg_la_LDFLAGS = -no-undefined -version-info $(JPEG_LIB_VERSION) \
 # Executable sources & libs
 mtest_SOURCES = test.cpp
 cjpeg_SOURCES = cjpeg.c rdppm.c rdgif.c rdtarga.c rdrle.c rdbmp.c \
-        rdswitch.c cdjpeg.c majapeg.cpp
+        rdswitch.c cdjpeg.c majapeg.cpp adaptf.c
 
 cjpeg_LDADD = libjpeg.la
 djpeg_SOURCES = djpeg.c wrppm.c wrgif.c wrtarga.c wrrle.c wrbmp.c \
@@ -533,6 +535,8 @@ jpegtran_SOURCES = jpegtran.c rdswitch.c cdjpeg.c transupp.c
 jpegtran_LDADD = libjpeg.la
 rdjpgcom_SOURCES = rdjpgcom.c
 wrjpgcom_SOURCES = wrjpgcom.c
+#jcdctmgr_SOURCES  = adaptf.c
+#jcdctmgr_LDADD  = libjpeg.la
 
 # Manual pages to install
 man_MANS = $(DISTMANS)
@@ -730,6 +734,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/@MEMORYMGR@.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/adaptf.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cdjpeg.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cjpeg.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/djpeg.Po@am__quote@ # am--include-marker
@@ -1047,6 +1052,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 		-rm -f ./$(DEPDIR)/@MEMORYMGR@.Plo
+	-rm -f ./$(DEPDIR)/adaptf.Po
 	-rm -f ./$(DEPDIR)/cdjpeg.Po
 	-rm -f ./$(DEPDIR)/cjpeg.Po
 	-rm -f ./$(DEPDIR)/djpeg.Po
@@ -1162,6 +1168,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
 		-rm -f ./$(DEPDIR)/@MEMORYMGR@.Plo
+	-rm -f ./$(DEPDIR)/adaptf.Po
 	-rm -f ./$(DEPDIR)/cdjpeg.Po
 	-rm -f ./$(DEPDIR)/cjpeg.Po
 	-rm -f ./$(DEPDIR)/djpeg.Po

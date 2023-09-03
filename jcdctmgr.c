@@ -21,6 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <math.h>
+
 #include "adaptf.h"
 
 /* Private subobject for this module */
@@ -87,6 +89,9 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
   DCTELEM * divisors = (DCTELEM *) compptr->dct_table;
   DCTELEM workspace[DCTSIZE2];	/* work area for FDCT subroutine */
   JDIMENSION bi;
+  
+  //int all_rates[sizeof(workspace)];
+  //printf("%li ", sizeof(sample_data));
 
   for (bi = 0; bi < num_blocks; bi++, start_col += compptr->DCT_h_scaled_size) {
     /* Perform the DCT */
@@ -98,24 +103,25 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
       register JCOEFPTR output_ptr = coef_blocks[bi];
       
       float sum=0;
+      float coefs[64];
 
       for (i = 0; i < DCTSIZE2; i++) {
-	      qval = divisors[i];
-        temp = workspace[i];
-        //temp = changed_coefs(i, temp);        //temp is scaled by x/15, now we have to find the percentage per block
+	      
+        coefs[i] = changed_coefs(i, workspace[i]);
 
-        float x = changed_coefs(i, temp);
-        if(x >= 0) {
-          sum += x;
+        if(coefs[i] >= 0) {
+          sum += coefs[i];
         }
         else {
-          sum -= x;
+          sum -= coefs[i];
         }
 
         if(i = DCTSIZE2) {
-          int percent = sum/43.69;
-          //printf("sum: %i  \n", percent*2+50);
+          float percent = sum/4369;
+          int quality = sin(percent*3.14/2) * 200 + 50;
+          //printf("sum: %d  \n", quality);
         }
+      }
      
 	/* Divide the coefficient value by qval, ensuring proper rounding.
 	 * Since C does not specify the direction of rounding for negative
@@ -129,21 +135,27 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
 	 * for a < b to discover whether a/b is 0.
 	 * If your machine's division is fast enough, define FAST_DIVIDE.
 	 */
-#ifdef FAST_DIVIDE
-#define DIVIDE_BY(a,b)	a /= b
-#else
-#define DIVIDE_BY(a,b)	if (a >= b) a /= b; else a = 0
-#endif
-	if (temp < 0) {
-	  temp = -temp;
-	  temp += qval>>1;	/* for rounding */
-	  DIVIDE_BY(temp, qval);
-	  temp = -temp;
-	} else {
-	  temp += qval>>1;	/* for rounding */
-	  DIVIDE_BY(temp, qval);
-	}
-	output_ptr[i] = (JCOEF) temp;
+    for (i = 0; i < DCTSIZE2; i++) {
+	      #ifdef FAST_DIVIDE
+        #define DIVIDE_BY(a,b)	a /= b
+        #else
+        #define DIVIDE_BY(a,b)	if (a >= b) a /= b; else a = 0
+        #endif
+        temp=workspace[i];
+        qval = divisors[i];
+
+          if (temp < 0) {
+            temp = -temp;
+            temp += qval>>1;	/* for rounding */
+            DIVIDE_BY(temp, qval);
+            //printf(temp*percent/100/qval);
+            temp = -temp;
+          } else {
+            temp += qval>>1;	/* for rounding */
+            DIVIDE_BY(temp, qval);
+          }
+          output_ptr[i] = (JCOEF) temp;
+
       }
     }
   }

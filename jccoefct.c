@@ -154,6 +154,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
   jpeg_component_info *compptr;
   forward_DCT_ptr forward_DCT;
 
+
   /* Loop to write as much as one whole iMCU row */
   for (yoffset = coef->MCU_vert_offset; yoffset < coef->MCU_rows_per_iMCU_row;
        yoffset++) {
@@ -168,10 +169,13 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
        * block's DC value.  (Thanks to Thomas Kinsman for this idea.)
        */
       blkp = coef->blk_buffer;	/* pointer to current DCT block within MCU */
+      
+
       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {     //ci = components(typically 3 for 3 colors)
         //fprintf(stderr, "%i ", ci);
 	compptr = cinfo->cur_comp_info[ci];
 	forward_DCT = cinfo->fdct->forward_DCT[compptr->component_index];
+      //printf("%i ", last_iMCU_row);
 	input_ptr = input_buf[compptr->component_index] +
 	  yoffset * compptr->DCT_v_scaled_size;
 	/* ypos == (yoffset + yindex) * compptr->DCT_v_scaled_size */
@@ -186,6 +190,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 	    (*forward_DCT) (cinfo, compptr, input_ptr, blkp,
 			    xpos, (JDIMENSION) blockcnt);
           cntr = cntr + 1;
+          //printf("%i ", blockcnt);
           //fprintf(stderr, "%i ", yindex);     //01000100010001000100...
           //fprintf(stderr, "%i ", MCU_col_num); //10 puta uzastopno ispisuje brojeve od 0 do 14 od po 4
           // 00001111222233334444...        za sliku testimg.bmp
@@ -222,7 +227,6 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
   }
   /* Completed the iMCU row, advance counters for next one */
   coef->iMCU_row_num++;
-  //fprintf(stderr, "%i ", iMCU_row_num);
   start_iMCU_row(cinfo);
   return TRUE;
 }
