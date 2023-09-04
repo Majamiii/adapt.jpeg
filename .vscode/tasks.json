@@ -1,0 +1,15 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "make cjpeg",
+            "command": "/usr/bin/make",
+            "args": ["cjpeg", "-j8"],
+            "problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			  }
+        }
+    ],
+    "version": "2.0.0"
+}
