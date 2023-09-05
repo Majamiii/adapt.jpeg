@@ -172,17 +172,14 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
       
 
       for (ci = 0; ci < cinfo->comps_in_scan; ci++) {     //ci = components(typically 3 for 3 colors)
-        //fprintf(stderr, "%i ", ci);
 	compptr = cinfo->cur_comp_info[ci];
 	forward_DCT = cinfo->fdct->forward_DCT[compptr->component_index];
-      //printf("%i ", last_iMCU_row);
 	input_ptr = input_buf[compptr->component_index] +
 	  yoffset * compptr->DCT_v_scaled_size;
 	/* ypos == (yoffset + yindex) * compptr->DCT_v_scaled_size */
 	blockcnt = (MCU_col_num < last_MCU_col) ? compptr->MCU_width
 						: compptr->last_col_width;
 	xpos = MCU_col_num * compptr->MCU_sample_width;
-  //fprintf(stderr, "%i ", xpos);
   int cntr = 0;
 	for (yindex = 0; yindex < compptr->MCU_height; yindex++) {
 	  if (coef->iMCU_row_num < last_iMCU_row ||
@@ -190,13 +187,8 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 	    (*forward_DCT) (cinfo, compptr, input_ptr, blkp,
 			    xpos, (JDIMENSION) blockcnt);
           cntr = cntr + 1;
-          //printf("%i ", blockcnt);
-          //fprintf(stderr, "%i ", yindex);     //01000100010001000100...
-          //fprintf(stderr, "%i ", MCU_col_num); //10 puta uzastopno ispisuje brojeve od 0 do 14 od po 4
-          // 00001111222233334444...        za sliku testimg.bmp
           input_ptr += compptr->DCT_v_scaled_size;
 	    blkp += blockcnt;
-      //fprintf(stderr, "%i ", blockcnt); //221122112211... sve do kraja gde ima vise jedinica
 	    /* Dummy blocks at right edge */
 	    if ((xindex = compptr->MCU_width - blockcnt) == 0)
 	      continue;
@@ -228,7 +220,6 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
   /* Completed the iMCU row, advance counters for next one */
   coef->iMCU_row_num++;
   start_iMCU_row(cinfo);
-  // printf("%i ", last_iMCU_row);   //theres 10 iMCU rows
   return TRUE;
 }
 

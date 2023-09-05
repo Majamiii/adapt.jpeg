@@ -8,6 +8,8 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
+            "program": "${workspaceFolder}/build/.libs/cjpeg", // by looking at the cjpeg shell script, it seems that "set -o posix; (unset CDPATH) >/dev/null 2>&1 && unset CDPATH;"
+            "args": ["-outfile", "../output/maja.jpg", "../testimg.bmp"],       // might be needed, but its lack does not create any problems as far as it can be observed
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "externalConsole": false,

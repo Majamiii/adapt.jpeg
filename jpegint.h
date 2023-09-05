@@ -103,7 +103,7 @@ struct jpeg_downsampler {
 typedef JMETHOD(void, forward_DCT_ptr,
 		(j_compress_ptr cinfo, jpeg_component_info * compptr,
 		 JSAMPARRAY sample_data, JBLOCKROW coef_blocks,
-		 JDIMENSION start_col, JDIMENSION num_blocks));     //ovde je definisanje funkcije
+		 JDIMENSION start_col, JDIMENSION num_blocks));
 
 struct jpeg_forward_dct {
   JMETHOD(void, start_pass, (j_compress_ptr cinfo));
