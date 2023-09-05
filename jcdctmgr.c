@@ -116,9 +116,20 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
 
         if(i = DCTSIZE2-1) {
           float percent = sum/43.69;
+          printf("og: %f   new:", percent);
           if(percent>12.5) {
             percent = 12.5;
           }
+          percent /= 6.25;    //we get a number between 0 and 2
+          
+          if(percent > 0.024) {                             //because log10(0) = -inf + the treshold is about 0.023
+            percent = (log10(percent*10) + 0.7)*6.25;      //log10(percent) is between 0 and 2 so the result is between 0 and 12.5
+          }
+          else {
+            percent = 0;
+          }
+          
+          printf(" %f \n", percent);
           quality = percent * 4 + 50;
         }
       }
