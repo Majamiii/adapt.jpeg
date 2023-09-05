@@ -8,13 +8,26 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/.libs/cjpeg",
-            "args": ["bash", "cjpeg", "--help"],
+            "program": "${workspaceFolder}/build/.libs/cjpeg", // by looking at the cjpeg shell script, it seems that "set -o posix; (unset CDPATH) >/dev/null 2>&1 && unset CDPATH;"
+            "args": ["-outfile", "../output/maja.jpg", "../testimg.bmp"],       // might be needed, but its lack does not create any problems as far as it can be observed
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "externalConsole": false,
             "MIMode": "gdb",
-            "environment": [{"name":"LD_LIBRARY_PATH", "value": "${workspaceFolder}/build/.libs"}],
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH", 
+                    "value": "${workspaceFolder}/build/.libs"
+                },
+                {
+                    "name": "BIN_SH",
+                    "value": "xpg4"
+                },
+                {
+                    "name": "DUALCASE",
+                    "value": "1"
+                }
+            ],
             "miDebuggerPath": "/usr/bin/gdb",
             "preLaunchTask": "make cjpeg"
         }
