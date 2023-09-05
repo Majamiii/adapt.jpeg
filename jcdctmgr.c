@@ -89,19 +89,17 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
   DCTELEM * divisors = (DCTELEM *) compptr->dct_table;
   DCTELEM workspace[DCTSIZE2];	/* work area for FDCT subroutine */
   JDIMENSION bi;
-  
-  //int all_rates[sizeof(workspace)];
-  //printf("%li ", sizeof(sample_data));
 
   for (bi = 0; bi < num_blocks; bi++, start_col += compptr->DCT_h_scaled_size) {
     /* Perform the DCT */
-    (*do_dct) (workspace, sample_data, start_col); //start_col represents a number of horizontal pixels (num divisible by 4)
+    (*do_dct) (workspace, sample_data, start_col); //start_col represents a number of horizontal pixels (num divisible by 8)
 
     /* Quantize/descale the coefficients, and store into coef_blocks[] */
     { register DCTELEM temp, qval;
       register int i;
       register JCOEFPTR output_ptr = coef_blocks[bi];
       
+      int quality;
       float sum=0;
       float coefs[64];
 
@@ -116,12 +114,26 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
           sum -= coefs[i];
         }
 
-        if(i = DCTSIZE2) {
-          float percent = sum/4369;
-          int quality = sin(percent*3.14/2) * 200 + 50;
-          //printf("sum: %d  \n", quality);
+        if(i = DCTSIZE2-1) {
+          float percent = sum/43.69;
+          printf("og: %f   new:", percent);
+          if(percent>12.5) {
+            percent = 12.5;
+          }
+          percent /= 6.25;    //we get a number between 0 and 2
+          
+          if(percent > 0.024) {                             //because log10(0) = -inf + the treshold is about 0.023
+            percent = (log10(percent*10) + 0.7)*6.25;      //log10(percent) is between 0 and 2 so the result is between 0 and 12.5
+          }
+          else {
+            percent = 0;
+          }
+          
+          printf(" %f \n", percent);
+          quality = percent * 4 + 50;
         }
       }
+
      
 	/* Divide the coefficient value by qval, ensuring proper rounding.
 	 * Since C does not specify the direction of rounding for negative
@@ -141,21 +153,21 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
         #else
         #define DIVIDE_BY(a,b)	if (a >= b) a /= b; else a = 0
         #endif
-        temp=workspace[i];
+        temp=workspace[i]*quality/100;
+        
         qval = divisors[i];
+
 
           if (temp < 0) {
             temp = -temp;
             temp += qval>>1;	/* for rounding */
             DIVIDE_BY(temp, qval);
-            //printf(temp*percent/100/qval);
             temp = -temp;
           } else {
             temp += qval>>1;	/* for rounding */
             DIVIDE_BY(temp, qval);
           }
           output_ptr[i] = (JCOEF) temp;
-
       }
     }
   }

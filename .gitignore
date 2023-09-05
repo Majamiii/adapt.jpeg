@@ -1,4 +1,5 @@
-build/
+build/*
+!.build/jconfig.h
 autom4te.cache/
 *~
 .vscode/*

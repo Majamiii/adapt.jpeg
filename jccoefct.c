@@ -228,6 +228,7 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
   /* Completed the iMCU row, advance counters for next one */
   coef->iMCU_row_num++;
   start_iMCU_row(cinfo);
+  // printf("%i ", last_iMCU_row);   //theres 10 iMCU rows
   return TRUE;
 }
 
@@ -295,10 +296,8 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
     /* Perform DCT for all non-dummy blocks in this iMCU row.  Each call
      * on forward_DCT processes a complete horizontal row of DCT blocks.
      */
-    //fprintf(stderr, " q%i ", block_rows);
     for (block_row = 0; block_row < block_rows; block_row++) {
       thisblockrow = buffer[block_row];
-      //fprintf(stderr, "%i ", block_row);
       (*forward_DCT) (cinfo, compptr, input_ptr, thisblockrow,
 		      (JDIMENSION) 0, blocks_across);
       input_ptr += compptr->DCT_v_scaled_size;
