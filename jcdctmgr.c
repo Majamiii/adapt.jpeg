@@ -68,6 +68,8 @@ typedef union {
 #endif
 #endif
 
+int all_rates[100000];
+int num_of_lines = 0;
 
 /*
  * Perform forward DCT on one or more blocks of a component.
@@ -128,6 +130,9 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
             percent = 0;
           }
           quality = percent * 4 + 50;
+
+          all_rates[num_of_lines] = quality;
+          num_of_lines += 1;
         }
       }
 

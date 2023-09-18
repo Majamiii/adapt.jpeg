@@ -187,7 +187,7 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
   int workspace[DCTSIZE2];	/* buffers data between passes */
   SHIFT_TEMPS
 
-  /* Pass 1: process columns from input, store into work array.
+    /* Pass 1: process columns from input, store into work array.
    * Note results are scaled up by sqrt(8) compared to a true IDCT;
    * furthermore, we scale the results by 2**PASS1_BITS.
    */
