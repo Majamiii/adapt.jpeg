@@ -192,6 +192,8 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
    * furthermore, we scale the results by 2**PASS1_BITS.
    */
 
+  //printf("123 \n");
+
   inptr = coef_block;
   quantptr = (ISLOW_MULT_TYPE *) compptr->dct_table;
   wsptr = workspace;

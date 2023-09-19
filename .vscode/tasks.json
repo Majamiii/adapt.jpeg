@@ -4,7 +4,7 @@
             "type": "shell",
             "label": "make cjpeg",
             "command": "/usr/bin/make",
-            "args": ["cjpeg", "-j8"],
+            "args": ["cjpeg", "-j8", "-lm"],
             "problemMatcher": [],
 			"options": {
 				"cwd": "${workspaceFolder}/build"
