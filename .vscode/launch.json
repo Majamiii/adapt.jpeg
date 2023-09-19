@@ -36,7 +36,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/.libs/djpeg",
-            "args": ["-bmp", "-outfile", "../doutput/b.jpg", "../coutput/b.jpg"],
+            "args": ["-bmp", "-outfile", "../doutput/b.bmp", "../coutput/b.jpg"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "externalConsole": false,
