@@ -87,7 +87,7 @@ cjpeg_SOURCES    = cjpeg.c rdppm.c rdgif.c rdtarga.c rdrle.c rdbmp.c \
         rdswitch.c cdjpeg.c majapeg.cpp adaptf.c
 cjpeg_LDADD      = libjpeg.la
 djpeg_SOURCES    = djpeg.c wrppm.c wrgif.c wrtarga.c wrrle.c wrbmp.c \
-        rdcolmap.c cdjpeg.c
+        rdcolmap.c cdjpeg.c adaptf.c
 djpeg_LDADD      = libjpeg.la
 jpegtran_SOURCES = jpegtran.c rdswitch.c cdjpeg.c transupp.c
 jpegtran_LDADD   = libjpeg.la
@@ -144,3 +144,5 @@ check-local:
 	cmp $(srcdir)/testimg.ppm testoutp.ppm
 	cmp $(srcdir)/testimgp.jpg testoutp.jpg
 	cmp $(srcdir)/testorig.jpg testoutt.jpg
+
+LIBS += -lm

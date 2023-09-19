@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "(gdb) cjpeg Launch",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/.libs/cjpeg", // by looking at the cjpeg shell script, it seems that "set -o posix; (unset CDPATH) >/dev/null 2>&1 && unset CDPATH;"
@@ -30,6 +30,33 @@
             ],
             "miDebuggerPath": "/usr/bin/gdb",
             "preLaunchTask": "make cjpeg"
+        },
+        {
+            "name": "(gdb) djpeg Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/.libs/djpeg",
+            "args": ["-bmp", "-outfile", "../doutput/b.bmp", "../coutput/b.jpg"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH", 
+                    "value": "${workspaceFolder}/build/.libs"
+                },
+                {
+                    "name": "BIN_SH",
+                    "value": "xpg4"
+                },
+                {
+                    "name": "DUALCASE",
+                    "value": "1"
+                }
+            ],
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "make djpeg"
         }
     ]
 }
