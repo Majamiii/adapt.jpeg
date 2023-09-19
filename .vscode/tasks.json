@@ -9,6 +9,16 @@
 			"options": {
 				"cwd": "${workspaceFolder}/build"
 			  }
+        },
+        {
+            "type": "shell",
+            "label": "make djpeg",
+            "command": "/usr/bin/make",
+            "args": ["djpeg", "-j8", "-lm"],
+            "problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			  }
         }
     ],
     "version": "2.0.0"
