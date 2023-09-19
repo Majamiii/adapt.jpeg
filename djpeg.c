@@ -87,7 +87,6 @@ static IMAGE_FORMATS requested_fmt;
 static const char * progname;	/* program name for error messages */
 static char * outfilename;	/* for -outfile switch */
 
-#define BMP_SUPPORTED 1
 
 LOCAL(void)
 usage (void)
@@ -448,7 +447,7 @@ main (int argc, char **argv)
   FILE * output_file;
   JDIMENSION num_scanlines;
 
-  printf("\n random \n");
+  //printf("\n random \n");
 
   /* On Mac, fetch a command line. */
 #ifdef USE_CCOMMAND

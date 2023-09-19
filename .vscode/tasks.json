@@ -14,7 +14,7 @@
             "type": "shell",
             "label": "make djpeg",
             "command": "/usr/bin/make",
-            "args": ["djpeg", "-j8", "-lm"],
+            "args": ["djpeg", "-j8"],
             "problemMatcher": [],
 			"options": {
 				"cwd": "${workspaceFolder}/build"
