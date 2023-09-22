@@ -15,6 +15,8 @@
 #include "jinclude.h"
 #include "jpeglib.h"
 
+extern FILE *fptr;
+
 
 /* Note: currently, there is no operating mode in which a full-image buffer
  * is needed at this step.  If there were, that mode could not be used with

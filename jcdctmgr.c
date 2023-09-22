@@ -25,6 +25,9 @@
 
 #include "adaptf.h"
 
+
+//#include "jcmainct.c"
+
 /* Private subobject for this module */
 
 typedef struct {
@@ -68,8 +71,6 @@ typedef union {
 #endif
 #endif
 
-int all_rates[100000];
-int num_of_lines = 0;
 
 /*
  * Perform forward DCT on one or more blocks of a component.
@@ -78,6 +79,9 @@ int num_of_lines = 0;
  * position start_col, and moving to the right for any additional blocks.
  * The quantized coefficients are returned in coef_blocks[].
  */
+
+int num_of_lines = 0;
+int all_rates[100000];
 
 METHODDEF(void)
 forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
@@ -91,6 +95,9 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
   DCTELEM * divisors = (DCTELEM *) compptr->dct_table;
   DCTELEM workspace[DCTSIZE2];	/* work area for FDCT subroutine */
   JDIMENSION bi;
+
+  FILE *fptr;
+  fptr = fopen("../rates.txt","a");
 
   for (bi = 0; bi < num_blocks; bi++, start_col += compptr->DCT_h_scaled_size) {
     /* Perform the DCT */
@@ -133,6 +140,9 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
 
           all_rates[num_of_lines] = quality;
           num_of_lines += 1;
+
+          fprintf(fptr, "%i\n", quality);
+
         }
       }
 
@@ -173,6 +183,7 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
       }
     }
   }
+  fclose(fptr);
 }
 
 

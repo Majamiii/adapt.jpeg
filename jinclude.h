@@ -88,6 +88,8 @@
  * Furthermore, macros are provided for fflush() and ferror() in order
  * to facilitate adaption by applications using an own FILE class.
  */
+#ifndef JINCLUDE_H
+#define JINCLUDE_H
 
 #define JFREAD(file,buf,sizeofbuf)  \
   ((size_t) fread((void *) (buf), (size_t) 1, (size_t) (sizeofbuf), (file)))
@@ -95,3 +97,10 @@
   ((size_t) fwrite((const void *) (buf), (size_t) 1, (size_t) (sizeofbuf), (file)))
 #define JFFLUSH(file)	fflush(file)
 #define JFERROR(file)	ferror(file)
+
+void jinit_c_main_controller();
+
+//extern FILE *fptr;
+
+
+#endif

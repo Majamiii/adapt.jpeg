@@ -55,7 +55,6 @@
 
 #ifdef DCT_ISLOW_SUPPORTED
 
-
 /*
  * This module is specialized to the case DCTSIZE = 8.
  */
@@ -169,6 +168,7 @@
  * Optimized algorithm with 12 multiplications in the 1-D kernel.
  * cK represents sqrt(2) * cos(K*pi/16).
  */
+int nblock = 0;
 
 GLOBAL(void)
 jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
@@ -191,8 +191,8 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
    * Note results are scaled up by sqrt(8) compared to a true IDCT;
    * furthermore, we scale the results by 2**PASS1_BITS.
    */
-
-  //printf("123 \n");
+  int rate = 60;
+  nblock++;
 
   inptr = coef_block;
   quantptr = (ISLOW_MULT_TYPE *) compptr->dct_table;
@@ -421,6 +421,10 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     outptr[4] = range_limit[(int) RIGHT_SHIFT(tmp13 - tmp0,
 					      CONST_BITS+PASS1_BITS+3)
 			    & RANGE_MASK];
+
+    for (int clmns = 0; clmns<8; clmns++) {
+      outptr[DCTSIZE*clmns] *= 100/rate;
+    }
 
     wsptr += DCTSIZE;		/* advance pointer to next row */
   }

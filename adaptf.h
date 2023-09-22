@@ -3,9 +3,6 @@
 
 int changed_coefs();
 
-//#include <stdio.h>
-//#include <stdlib.h>
-
-
+void saved_rates();
 
 #endif

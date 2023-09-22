@@ -546,6 +546,7 @@ main (int argc, char **argv)
   /* Read file header, set default decompression parameters */
   (void) jpeg_read_header(&cinfo, TRUE);
 
+
   /* Adjust default decompression parameters by re-parsing the options */
   file_index = parse_switches(&cinfo, argc, argv, 0, TRUE);
 
@@ -589,6 +590,12 @@ main (int argc, char **argv)
   }
   dest_mgr->output_file = output_file;
 
+  int *arr_ptr = read_rates();
+  // for (int i = 0; i < 5; i++) {
+  //       printf("%d ", *(arr_ptr + i));
+  //   }
+  //   printf("\n");
+
   /* Start decompressor */
   (void) jpeg_start_decompress(&cinfo);
 
@@ -630,4 +637,31 @@ main (int argc, char **argv)
   /* All done. */
   exit(jerr.num_warnings ? EXIT_WARNING : EXIT_SUCCESS);
   return 0;			/* suppress no-return-value warnings */
+}
+
+
+
+
+int *read_rates() {
+
+    FILE *file;
+    file = fopen("../rates.txt", "r");
+
+    // const long long arrsize  = 100000;
+    static int rates[100000];
+    int num = 0;
+
+    int i=0;
+
+    while(fscanf(file, "%d\n", &num) == 1) {
+          rates[i] = num;
+          i++;
+      }
+
+    rates[i] = 0;
+
+    fclose(file);
+
+    return rates;
+
 }

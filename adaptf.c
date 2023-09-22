@@ -14,6 +14,8 @@ DCT values lie between -8192 and 8184
 
 #include "adaptf.h"
 
+#include "jinclude.h"
+
 
 int changed_coefs(int index, int num)
 {
@@ -44,83 +46,6 @@ int changed_coefs(int index, int num)
 
 
 
-/*
-int *all_percentages(int nofpixels)
-{   
-    //int height = pixel_height();
-    FILE *fp;
-    fp = fopen("./dctcoefs.txt", "r");
 
-    int nofblocks = nofpixels/64;
-    printf("\n blocks: %i \n", nofblocks);
-
-    int percent=0;
-    
-   // int n, j, k;
-    int ogcoefs[nofpixels];
-    int newcoefs[nofpixels];
-    int block_count;
-
-    int percentages[nofblocks];
-    
-    for (block_count=0; block_count<nofblocks; block_count++) {         //find rates for every block
-
-        printf("%i ", block_count);
-        int sum = 0;
-        //changing one block of DCT coefficient
-
-        for (int i = block_count*64; i < block_count*64 + 64; i++) {          //change 64 later to DCTSIZE2, do this for every pixel
-            int x = fscanf(fp, "%i\n", &ogcoefs[i]); //store info in ogcoefs array
-        }
-    
-        int broj=0;
-        int k=0;
-        int j=0;
-        for (int i=0; i<64; i++, j++) {
-
-            broj = j+1;
-
-            if(j==k+7) {
-                j=j-7;
-                k = k+1;
-            }
-
-            // printf("%i ", broj);
-
-            newcoefs[i + block_count*64] = ogcoefs[i+block_count*64] * broj / 15;
-
-            //printf("%i \n", newcoefs[i+ block_count*64]);
-            
-            if (newcoefs[i+block_count*64] < 0) {
-                sum -= newcoefs[i+block_count*64];
-            }
-            else {
-                sum += newcoefs[i+block_count*64];
-            }
-        }
-
-        fclose(fp);
-
-        percent = 50 + sum / 43.69;
-
-        percentages[block_count] = percent;
-        printf("%i \n", percentages[block_count]);
-    }
-
-    //printf("%i \n", percent);
-
-    return percentages;
-}
-
-int *changed_coefs()
-{
-    int pixels = num_pixels();
-    //int percent = one_block(pixels);
-
-    int *n;
-    n = all_percentages(pixels);
-    
-    return n;
-}*/
 
 

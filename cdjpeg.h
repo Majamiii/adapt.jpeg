@@ -89,6 +89,8 @@ struct cdjpeg_progress_mgr {
 
 typedef struct cdjpeg_progress_mgr * cd_progress_ptr;
 
+int *read_rates();
+
 
 /* Short forms of external names for systems with brain-damaged linkers. */
 
