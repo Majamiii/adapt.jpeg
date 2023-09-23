@@ -161,7 +161,7 @@ struct jpeg_d_main_controller {
   JMETHOD(void, start_pass, (j_decompress_ptr cinfo, J_BUF_MODE pass_mode));
   JMETHOD(void, process_data, (j_decompress_ptr cinfo,
 			       JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
-			       JDIMENSION out_rows_avail));
+			       JDIMENSION out_rows_avail, int *arr_ptr));
 };
 
 /* Coefficient buffer control */
@@ -170,7 +170,7 @@ struct jpeg_d_coef_controller {
   JMETHOD(int, consume_data, (j_decompress_ptr cinfo));
   JMETHOD(void, start_output_pass, (j_decompress_ptr cinfo));
   JMETHOD(int, decompress_data, (j_decompress_ptr cinfo,
-				 JSAMPIMAGE output_buf));
+				 JSAMPIMAGE output_buf, int *arr_ptr));
   /* Pointer to array of coefficient virtual arrays, or NULL if none */
   jvirt_barray_ptr *coef_arrays;
 };
@@ -218,7 +218,7 @@ struct jpeg_entropy_decoder {
 typedef JMETHOD(void, inverse_DCT_method_ptr,
 		(j_decompress_ptr cinfo, jpeg_component_info * compptr,
 		 JCOEFPTR coef_block,
-		 JSAMPARRAY output_buf, JDIMENSION output_col));
+		 JSAMPARRAY output_buf, JDIMENSION output_col, int *arr_ptr));
 
 struct jpeg_inverse_dct {
   JMETHOD(void, start_pass, (j_decompress_ptr cinfo));

@@ -237,7 +237,7 @@ EXTERN(void) jpeg_fdct_1x2
 
 EXTERN(void) jpeg_idct_islow
     JPP((j_decompress_ptr cinfo, jpeg_component_info * compptr,
-	 JCOEFPTR coef_block, JSAMPARRAY output_buf, JDIMENSION output_col));
+	 JCOEFPTR coef_block, JSAMPARRAY output_buf, JDIMENSION output_col, int *arr_ptr));
 EXTERN(void) jpeg_idct_ifast
     JPP((j_decompress_ptr cinfo, jpeg_component_info * compptr,
 	 JCOEFPTR coef_block, JSAMPARRAY output_buf, JDIMENSION output_col));

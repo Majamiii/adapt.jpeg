@@ -56,7 +56,7 @@ typedef my_main_controller * my_main_ptr;
 /* Forward declarations */
 METHODDEF(void) process_data_simple_main
 	JPP((j_compress_ptr cinfo, JSAMPARRAY input_buf,
-	     JDIMENSION *in_row_ctr, JDIMENSION in_rows_avail));
+	     JDIMENSION *in_row_ctr, JDIMENSION in_rows_avail, int *arr_ptr));
 #ifdef FULL_MAIN_BUFFER_SUPPORTED
 METHODDEF(void) process_data_buffer_main
 	JPP((j_compress_ptr cinfo, JSAMPARRAY input_buf,
@@ -115,7 +115,7 @@ start_pass_main (j_compress_ptr cinfo, J_BUF_MODE pass_mode)
 METHODDEF(void)
 process_data_simple_main (j_compress_ptr cinfo,
 			  JSAMPARRAY input_buf, JDIMENSION *in_row_ctr,
-			  JDIMENSION in_rows_avail)
+			  JDIMENSION in_rows_avail, int *arr_ptr)
 {
   my_main_ptr mainp = (my_main_ptr) cinfo->main;
 

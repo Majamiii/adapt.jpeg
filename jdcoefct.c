@@ -67,10 +67,10 @@ typedef my_coef_controller * my_coef_ptr;
 
 /* Forward declarations */
 METHODDEF(int) decompress_onepass
-	JPP((j_decompress_ptr cinfo, JSAMPIMAGE output_buf));
+	JPP((j_decompress_ptr cinfo, JSAMPIMAGE output_buf, int *arr_ptr));
 #ifdef D_MULTISCAN_FILES_SUPPORTED
 METHODDEF(int) decompress_data
-	JPP((j_decompress_ptr cinfo, JSAMPIMAGE output_buf));
+	JPP((j_decompress_ptr cinfo, JSAMPIMAGE output_buf, int *arr_ptr));
 #endif
 #ifdef BLOCK_SMOOTHING_SUPPORTED
 LOCAL(boolean) smoothing_ok JPP((j_decompress_ptr cinfo));
@@ -148,7 +148,7 @@ start_output_pass (j_decompress_ptr cinfo)
  */
 
 METHODDEF(int)
-decompress_onepass (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
+decompress_onepass (j_decompress_ptr cinfo, JSAMPIMAGE output_buf, int *arr_ptr)
 {
   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
   JDIMENSION MCU_col_num;	/* index of current MCU within row */
@@ -199,7 +199,7 @@ decompress_onepass (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
 	    output_col = start_col;
 	    for (xindex = 0; xindex < useful_width; xindex++) {
 	      (*inverse_DCT) (cinfo, compptr, (JCOEFPTR) (blkp + xindex),
-			      output_ptr, output_col);
+			      output_ptr, output_col, arr_ptr);
 	      output_col += compptr->DCT_h_scaled_size;
 	    }
 	    output_ptr += compptr->DCT_v_scaled_size;
@@ -317,7 +317,7 @@ consume_data (j_decompress_ptr cinfo)
  */
 
 METHODDEF(int)
-decompress_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
+decompress_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf, int *arr_ptr)
 {
   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
@@ -365,7 +365,7 @@ decompress_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
       output_col = 0;
       for (block_num = 0; block_num < compptr->width_in_blocks; block_num++) {
 	(*inverse_DCT) (cinfo, compptr, (JCOEFPTR) buffer_ptr,
-			output_ptr, output_col);
+			output_ptr, output_col, arr_ptr);
 	buffer_ptr++;
 	output_col += compptr->DCT_h_scaled_size;
       }
@@ -652,7 +652,7 @@ decompress_smooth_data (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
 	}
 	/* OK, do the IDCT */
 	(*inverse_DCT) (cinfo, compptr, (JCOEFPTR) workspace,
-			output_ptr, output_col);
+			output_ptr, output_col, 1);
 	/* Advance for next column */
 	DC1 = DC2; DC2 = DC3;
 	DC4 = DC5; DC5 = DC6;

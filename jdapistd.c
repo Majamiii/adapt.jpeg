@@ -116,7 +116,7 @@ output_pass_setup (j_decompress_ptr cinfo)
       /* Process some data */
       last_scanline = cinfo->output_scanline;
       (*cinfo->main->process_data) (cinfo, (JSAMPARRAY) NULL,
-				    &cinfo->output_scanline, (JDIMENSION) 0);
+				    &cinfo->output_scanline, (JDIMENSION) 0, 1);
       if (cinfo->output_scanline == last_scanline)
 	return FALSE;		/* No progress made, must suspend */
     }
@@ -151,7 +151,7 @@ output_pass_setup (j_decompress_ptr cinfo)
 
 GLOBAL(JDIMENSION)
 jpeg_read_scanlines (j_decompress_ptr cinfo, JSAMPARRAY scanlines,
-		     JDIMENSION max_lines)
+		     JDIMENSION max_lines, int *arr_ptr)
 {
   JDIMENSION row_ctr;
 
@@ -171,7 +171,7 @@ jpeg_read_scanlines (j_decompress_ptr cinfo, JSAMPARRAY scanlines,
 
   /* Process some data */
   row_ctr = 0;
-  (*cinfo->main->process_data) (cinfo, scanlines, &row_ctr, max_lines);
+  (*cinfo->main->process_data) (cinfo, scanlines, &row_ctr, max_lines, arr_ptr);
   cinfo->output_scanline += row_ctr;
   return row_ctr;
 }
@@ -208,7 +208,7 @@ jpeg_read_raw_data (j_decompress_ptr cinfo, JSAMPIMAGE data,
     ERREXIT(cinfo, JERR_BUFFER_SIZE);
 
   /* Decompress directly into user's buffer. */
-  if (! (*cinfo->coef->decompress_data) (cinfo, data))
+  if (! (*cinfo->coef->decompress_data) (cinfo, data, 1))
     return 0;			/* suspension forced, can do nothing more */
 
   /* OK, we processed one iMCU row. */

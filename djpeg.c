@@ -605,7 +605,7 @@ main (int argc, char **argv)
   /* Process data */
   while (cinfo.output_scanline < cinfo.output_height) {
     num_scanlines = jpeg_read_scanlines(&cinfo, dest_mgr->buffer,
-					dest_mgr->buffer_height);
+					dest_mgr->buffer_height, arr_ptr);
     (*dest_mgr->put_pixel_rows) (&cinfo, dest_mgr, num_scanlines);
   }
 

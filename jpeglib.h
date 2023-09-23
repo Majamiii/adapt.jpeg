@@ -1055,7 +1055,7 @@ EXTERN(int) jpeg_read_header JPP((j_decompress_ptr cinfo,
 EXTERN(boolean) jpeg_start_decompress JPP((j_decompress_ptr cinfo));
 EXTERN(JDIMENSION) jpeg_read_scanlines JPP((j_decompress_ptr cinfo,
 					    JSAMPARRAY scanlines,
-					    JDIMENSION max_lines));
+					    JDIMENSION max_lines, int *arr_ptr));
 EXTERN(boolean) jpeg_finish_decompress JPP((j_decompress_ptr cinfo));
 
 /* Replaces jpeg_read_scanlines when reading raw downsampled data. */

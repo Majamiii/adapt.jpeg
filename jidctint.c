@@ -168,12 +168,12 @@
  * Optimized algorithm with 12 multiplications in the 1-D kernel.
  * cK represents sqrt(2) * cos(K*pi/16).
  */
-int nblock = 0;
+int blkcntr = 0;
 
 GLOBAL(void)
 jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
 		 JCOEFPTR coef_block,
-		 JSAMPARRAY output_buf, JDIMENSION output_col)
+		 JSAMPARRAY output_buf, JDIMENSION output_col, int *arr_ptr)
 {
   INT32 tmp0, tmp1, tmp2, tmp3;
   INT32 tmp10, tmp11, tmp12, tmp13;
@@ -191,8 +191,9 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
    * Note results are scaled up by sqrt(8) compared to a true IDCT;
    * furthermore, we scale the results by 2**PASS1_BITS.
    */
-  int rate = 60;
-  nblock++;
+
+  int rate = *(arr_ptr + blkcntr);
+  blkcntr += 1;
 
   inptr = coef_block;
   quantptr = (ISLOW_MULT_TYPE *) compptr->dct_table;

@@ -144,7 +144,7 @@ typedef my_main_controller * my_main_ptr;
 /* Forward declarations */
 METHODDEF(void) process_data_simple_main
 	JPP((j_decompress_ptr cinfo, JSAMPARRAY output_buf,
-	     JDIMENSION *out_row_ctr, JDIMENSION out_rows_avail));
+	     JDIMENSION *out_row_ctr, JDIMENSION out_rows_avail, int *arr_ptr));
 METHODDEF(void) process_data_context_main
 	JPP((j_decompress_ptr cinfo, JSAMPARRAY output_buf,
 	     JDIMENSION *out_row_ctr, JDIMENSION out_rows_avail));
@@ -351,13 +351,13 @@ start_pass_main (j_decompress_ptr cinfo, J_BUF_MODE pass_mode)
 
 METHODDEF(void)
 process_data_simple_main (j_decompress_ptr cinfo, JSAMPARRAY output_buf,
-			  JDIMENSION *out_row_ctr, JDIMENSION out_rows_avail)
+			  JDIMENSION *out_row_ctr, JDIMENSION out_rows_avail, int *arr_ptr)
 {
   my_main_ptr mainp = (my_main_ptr) cinfo->main;
 
   /* Read input data if we haven't filled the main buffer yet */
   if (mainp->rowgroup_ctr >= mainp->rowgroups_avail) {
-    if (! (*cinfo->coef->decompress_data) (cinfo, mainp->buffer))
+    if (! (*cinfo->coef->decompress_data) (cinfo, mainp->buffer, arr_ptr))
       return;			/* suspension forced, can do nothing more */
     mainp->rowgroup_ctr = 0;	/* OK, we have an iMCU row to work with */
   }
@@ -388,7 +388,7 @@ process_data_context_main (j_decompress_ptr cinfo, JSAMPARRAY output_buf,
   /* Read input data if we haven't filled the main buffer yet */
   if (! mainp->buffer_full) {
     if (! (*cinfo->coef->decompress_data) (cinfo,
-					   mainp->xbuffer[mainp->whichptr]))
+					   mainp->xbuffer[mainp->whichptr], 1))
       return;			/* suspension forced, can do nothing more */
     mainp->buffer_full = TRUE;	/* OK, we have an iMCU row to work with */
     mainp->iMCU_row_ctr++;	/* count rows received */
