@@ -169,6 +169,8 @@
  * cK represents sqrt(2) * cos(K*pi/16).
  */
 int blkcntr = 0;
+// int max = 0;
+// int n=0;
 
 GLOBAL(void)
 jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
@@ -181,19 +183,26 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
   JCOEFPTR inptr;
   ISLOW_MULT_TYPE * quantptr;
   int * wsptr;
+  int b;
   JSAMPROW outptr;
   JSAMPLE *range_limit = IDCT_range_limit(cinfo);
   int ctr;
   int workspace[DCTSIZE2];	/* buffers data between passes */
   SHIFT_TEMPS
 
+  float rate;
+  float m;
+    
+    m = *(arr_ptr + blkcntr);
+    rate = 100/m;
+
+  blkcntr += 1;
+
     /* Pass 1: process columns from input, store into work array.
    * Note results are scaled up by sqrt(8) compared to a true IDCT;
    * furthermore, we scale the results by 2**PASS1_BITS.
    */
 
-  int rate = *(arr_ptr + blkcntr);
-  blkcntr += 1;
 
   inptr = coef_block;
   quantptr = (ISLOW_MULT_TYPE *) compptr->dct_table;
@@ -213,7 +222,8 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
 	inptr[DCTSIZE*5] == 0 && inptr[DCTSIZE*6] == 0 &&
 	inptr[DCTSIZE*7] == 0) {
       /* AC terms all zero */
-      int dcval = DEQUANTIZE(inptr[DCTSIZE*0], quantptr[DCTSIZE*0]) << PASS1_BITS;
+      b = quantptr[DCTSIZE*0]*rate;
+      int dcval = DEQUANTIZE(inptr[DCTSIZE*0], b) << PASS1_BITS;
 
       wsptr[DCTSIZE*0] = dcval;
       wsptr[DCTSIZE*1] = dcval;
@@ -234,8 +244,8 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
      * The rotator is c(-6).
      */
 
-    z2 = DEQUANTIZE(inptr[DCTSIZE*0], quantptr[DCTSIZE*0]);
-    z3 = DEQUANTIZE(inptr[DCTSIZE*4], quantptr[DCTSIZE*4]);
+    z2 = DEQUANTIZE(inptr[DCTSIZE*0], quantptr[DCTSIZE*0]*rate);
+    z3 = DEQUANTIZE(inptr[DCTSIZE*4], quantptr[DCTSIZE*4]*rate);
     z2 <<= CONST_BITS;
     z3 <<= CONST_BITS;
     /* Add fudge factor here for final descale. */
@@ -244,8 +254,8 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     tmp0 = z2 + z3;
     tmp1 = z2 - z3;
 
-    z2 = DEQUANTIZE(inptr[DCTSIZE*2], quantptr[DCTSIZE*2]);
-    z3 = DEQUANTIZE(inptr[DCTSIZE*6], quantptr[DCTSIZE*6]);
+    z2 = DEQUANTIZE(inptr[DCTSIZE*2], quantptr[DCTSIZE*2]*rate);
+    z3 = DEQUANTIZE(inptr[DCTSIZE*6], quantptr[DCTSIZE*6]*rate);
 
     z1 = MULTIPLY(z2 + z3, FIX_0_541196100);       /* c6 */
     tmp2 = z1 + MULTIPLY(z2, FIX_0_765366865);     /* c2-c6 */
@@ -260,10 +270,10 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
      * transpose is its inverse.  i0..i3 are y7,y5,y3,y1 respectively.
      */
 
-    tmp0 = DEQUANTIZE(inptr[DCTSIZE*7], quantptr[DCTSIZE*7]);
-    tmp1 = DEQUANTIZE(inptr[DCTSIZE*5], quantptr[DCTSIZE*5]);
-    tmp2 = DEQUANTIZE(inptr[DCTSIZE*3], quantptr[DCTSIZE*3]);
-    tmp3 = DEQUANTIZE(inptr[DCTSIZE*1], quantptr[DCTSIZE*1]);
+    tmp0 = DEQUANTIZE(inptr[DCTSIZE*7], quantptr[DCTSIZE*7]*rate);
+    tmp1 = DEQUANTIZE(inptr[DCTSIZE*5], quantptr[DCTSIZE*5]*rate);
+    tmp2 = DEQUANTIZE(inptr[DCTSIZE*3], quantptr[DCTSIZE*3]*rate);
+    tmp3 = DEQUANTIZE(inptr[DCTSIZE*1], quantptr[DCTSIZE*1]*rate);
 
     z2 = tmp0 + tmp2;
     z3 = tmp1 + tmp3;
@@ -306,6 +316,7 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
    * Note that we must descale the results by a factor of 8 == 2**3,
    * and also undo the PASS1_BITS scaling.
    */
+
 
   wsptr = workspace;
   for (ctr = 0; ctr < DCTSIZE; ctr++) {
@@ -423,9 +434,6 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
 					      CONST_BITS+PASS1_BITS+3)
 			    & RANGE_MASK];
 
-    for (int clmns = 0; clmns<8; clmns++) {
-      outptr[DCTSIZE*clmns] *= 100/rate;
-    }
 
     wsptr += DCTSIZE;		/* advance pointer to next row */
   }

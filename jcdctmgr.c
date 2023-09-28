@@ -123,20 +123,22 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
           sum -= coefs[i];
         }
 
-        if(i = DCTSIZE2-1) {
+        if((i == DCTSIZE2-1)&&(bi==0)) {
+
           float percent = sum/43.69;
-          if(percent>12.5) {
-            percent = 12.5;
+          float thres = 45;
+          if(percent>thres) {
+            percent = thres;
           }
-          percent /= 6.25;    //we get a number between 0 and 2
+          percent /= thres/2;    //we get a number between 0 and 2
           
           if(percent > 0.024) {                             //because log10(0) = -inf + the threshold is about 0.023
-            percent = (log10(percent*10) + 0.7)*6.25;      //log10(percent) is between 0 and 2 so the result is between 0 and 12.5
+            percent = (log10(percent*10) + 0.7)*25;      //log10(percent) is between 0 and 2 so the result is between 0 and 12.5
           }
           else {
-            percent = 0;
+            percent = 3;
           }
-          quality = percent * 4 + 50;
+          quality = percent + 50;
 
           all_rates[num_of_lines] = quality;
           num_of_lines += 1;

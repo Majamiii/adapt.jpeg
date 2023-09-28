@@ -591,10 +591,6 @@ main (int argc, char **argv)
   dest_mgr->output_file = output_file;
 
   int *arr_ptr = read_rates();
-  // for (int i = 0; i < 5; i++) {
-  //       printf("%d ", *(arr_ptr + i));
-  //   }
-  //   printf("\n");
 
   /* Start decompressor */
   (void) jpeg_start_decompress(&cinfo);
@@ -621,8 +617,7 @@ main (int argc, char **argv)
    * of lifespan JPOOL_IMAGE; it needs to finish before releasing memory.
    */
   (*dest_mgr->finish_output) (&cinfo, dest_mgr);
-  (void) jpeg_finish_decompress(&cinfo);
-  jpeg_destroy_decompress(&cinfo);
+  (void) jpeg_finish_decompress(&cinfo); jpeg_destroy_decompress(&cinfo);
 
   /* Close files, if we opened them */
   if (input_file != stdin)
@@ -647,9 +642,16 @@ int *read_rates() {
     FILE *file;
     file = fopen("../rates.txt", "r");
 
-    // const long long arrsize  = 100000;
-    static int rates[100000];
+    static int *rates;
     int num = 0;
+
+    rates = (int*) malloc(100000 * sizeof(int));
+ 
+    // if memory cannot be allocated
+    if(rates == NULL) {
+      printf("Error! memory not allocated.");
+      exit(0);
+    }
 
     int i=0;
 

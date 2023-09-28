@@ -6,4 +6,6 @@ autom4te.cache/
 !.vscode/launch.json
 !.vscode/tasks.json
 !.build/jconfig.h
-output
+coutput/*
+doutput/*
+example.bmp
