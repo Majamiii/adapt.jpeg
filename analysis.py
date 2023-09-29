@@ -26,19 +26,7 @@ def compare_images(imageA, imageB, title):
 	m = mse(imageA, imageB)
 	s = ssim(imageA, imageB)
 	print("mse: ", m, "  ssim: ", s)
-	# setup the figure
-	fig = plt.figure(title)
-	plt.suptitle("MSE: %.2f, SSIM: %.2f" % (m, s))
-	# show first image
-	ax = fig.add_subplot(1, 2, 1)
-	plt.imshow(imageA, cmap = plt.cm.gray)
-	plt.axis("off")
-	# show the second image
-	ax = fig.add_subplot(1, 2, 2)
-	plt.imshow(imageB, cmap = plt.cm.gray)
-	plt.axis("off")
-	# show the images
-	plt.show()
+	
 
 
 original = cv2.imread("testimg.bmp") #load imgs
@@ -53,15 +41,6 @@ fig = plt.figure("Images")
 images = ("Original", original), ("Adaptive", adaptive), ("JPEG", jpeg)
 
 
-# loop over the images
-for (i, (name, image)) in enumerate(images):
-	# show the image
-	ax = fig.add_subplot(1, 3, i + 1)
-	ax.set_title(name)
-	plt.imshow(image, cmap = plt.cm.gray)
-	plt.axis("off")
-# show the figure
-plt.show()
 # compare the images
 print("the lower the mse && the higher the ssim => imgs are more similar")
 print()
