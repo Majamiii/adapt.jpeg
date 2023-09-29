@@ -196,7 +196,7 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     m = *(arr_ptr + blkcntr);
     rate = 100/m;
 
-  blkcntr += 1;
+    blkcntr += 1;
 
     /* Pass 1: process columns from input, store into work array.
    * Note results are scaled up by sqrt(8) compared to a true IDCT;

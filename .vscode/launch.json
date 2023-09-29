@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/.libs/cjpeg", // by looking at the cjpeg shell script, it seems that "set -o posix; (unset CDPATH) >/dev/null 2>&1 && unset CDPATH;"
             //"args": ["-outfile", "../coutput/b.jpg", "../testimg.bmp"],       // might be needed, but its lack does not create any problems as far as it can be observed
-            "args": ["-grayscale", "-outfile", "../coutput/b.jpg", "../testimg.bmp"],
+            "args": ["-grayscale", "-outfile", "../coutput/b.jpg", "../bmp3.bmp"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build",
             "externalConsole": false,

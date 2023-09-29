@@ -9,3 +9,9 @@ autom4te.cache/
 coutput/*
 doutput/*
 example.bmp
+rates.txt
+warnings.txt
+jpegs/*
+bmp2.bmp
+bmp3.bmp
+5.1.12magic.bmp
