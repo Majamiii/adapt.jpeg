@@ -59,16 +59,18 @@ def one_image(og, ad, jpg):
 
 
 
-def find_avgs(mse, ssim):
+def find_avgs(mse, ssim, size_arr):
 
 	print("mse = mean squared error, ssim = structural similarity")
 	print("the smaller the avg difference, more similar the new algorithm is to the og picture than that rate of jpeg compr")
+	print("size difference is sizeof(our new pic) - sizeof(regular jpeg)")
 	print()
 
 	len_arr = int(len(mse)/9)
 
 	mse_values = list()
 	ssim_values = list()
+	size_values = list()
 
 	for rate_index in range(9):
 
@@ -76,12 +78,14 @@ def find_avgs(mse, ssim):
 
 			mse_values.append(mse[num_el*9 + rate_index])
 			ssim_values.append(ssim[num_el*9 + rate_index])
+			size_values.append(size_arr[num_el*9 + rate_index])
 
-		mse_avg = mean(mse_values)
-		ssim_avg = mean(ssim_values)
+		mse_avg = round(mean(mse_values), 2)
+		ssim_avg = round(mean(ssim_values), 4)
+		size_avg = round(mean(size_values)/1000000, 4)
 
 		print("jpeg compression rate: ", 55+rate_index*5)
-		print("mse avg dif: ", mse_avg, "   ssim avg dif: ", ssim_avg)
+		print("avg dif of:  1) MSE: ", mse_avg, "   2) SSIM: ", ssim_avg, "    3) size (in MB): ", size_avg)
 		print()
 
 
@@ -98,8 +102,7 @@ def comparison():
 	mse_arr = list()
 	ssim_arr = list()
 
-	a_size_arr = list()
-	jpg_size_arr = list()
+	size_arr = list()
 
 	rate_dirs = ["55", "60", "65", "70", "75", "80", "85", "90", "95"]
 
@@ -112,15 +115,16 @@ def comparison():
 				adapt_jpg = os.path.join(input_dir, filename)
 				original = os.path.join("./images", dir_names[i], filename)
 
-				# adapt_size = os.path.getsize(adapt_jpg)
+				adapt_size = os.path.getsize(adapt_jpg)
 
 				# a_size_arr.append(adapt_size)
 
 				for j in range(len(rate_dirs)):				#for every rate of regularly compressed jpegs
 					reg_jpg = os.path.join("jpegs", rate_dirs[j], dir_names[i], filename)
 
-					# jpg_size = os.path.getsize(reg_jpg)
+					jpg_size = os.path.getsize(reg_jpg)
 					# jpg_size_arr.append(jpg_size)
+					size_arr.append(adapt_size - jpg_size)		#size_arr contains the difference between size of jpeg pic and new pic
 
 					m, s = one_image(original, adapt_jpg, reg_jpg)		#returns the difference between mses and ssims of adaptive and jpeg
 
@@ -129,7 +133,7 @@ def comparison():
 
 		print("hi")
 
-	find_avgs(mse_arr, ssim_arr)
+	find_avgs(mse_arr, ssim_arr, size_arr)
 
 
 	
@@ -198,5 +202,3 @@ def convert_all_jpegs():
 					if not os.path.exists(os.path.join("jpegs", out_dirs[j], dir_names[i])):
 						os.mkdir(os.path.join("jpegs", out_dirs[j], dir_names[i]))
 					im.save(os.path.join("jpegs", out_dirs[j], dir_names[i], filename), 'JPEG', quality=rates[j])
-
-
