@@ -59,34 +59,56 @@ def one_image():
 	compare_images(original, jpeg)
 
 
-makefile_dir = "./build"
-
-os.chdir(makefile_dir)
-
-# Run the make command
-subprocess.run(["make", "-j8"])
-
-os.chdir("..")
-print()
-working_dir = os.getcwd()
-print(working_dir)
-
-jpeg_dir = "jpegs/70"
-my_dir = "doutput"
-
-subprocess.run(["cjpeg", "-grayscale", "-outfile", "./coutput/b.jpg", "./testimg.bmp"])
-subprocess.run(["djpeg", "-bmp", "-outfile", "./doutput/b.bmp", "./coutput/b.jpg"])
-
-one_image()
 
 
+def make():
+	makefile_dir = "./build"
+	os.chdir(makefile_dir)
+	# Run the make command
+	subprocess.run(["make", "-j8"])
+	os.chdir("..")
 
-# # Loop through all files in the input directory
-# for filename in os.listdir(input_dir):
-#     # Check if the file is a JPEG image
-#     if filename.endswith(".jpg"):
-#         # Open the JPEG image
-#         with Image.open(os.path.join(input_dir, filename)) as im:
-#             # Convert the image to PNG format
-#             png_filename = os.path.splitext(filename)[0] + ".png"
-#             im.save(os.path.join(output_dir, png_filename), "PNG")
+
+def convert_my_alg():			#convert all the images from the dataset using the new, adaptive algorithm
+	make()
+
+	dir_names = ["aerials", "misc", "sequences", "textures"]
+	dir_imgs = "./images/"
+
+	for i in range(4):			#go through all 4 folders
+		input_dir = dir_imgs + dir_names[i]
+		coutput_dir = "./coutput/" + dir_names[i]
+		doutput_dir = "./doutput/" + dir_names[i]
+
+		for filename in os.listdir(input_dir):   #for every image in those folders
+			with Image.open(os.path.join(input_dir, filename)) as im:
+				cfilename = os.path.splitext(filename)[0] + ".jpg"
+				dfilename = os.path.splitext(filename)[0] + ".bmp"
+				jpeg_filename = os.path.splitext(filename)[0] + ".jpg"
+				
+				subprocess.run(["cjpeg", "-grayscale", "-outfile", os.path.join(coutput_dir, filename), os.path.join(input_dir, filename)])
+				subprocess.run(["djpeg", "-bmp", "-outfile", os.path.join(doutput_dir, filename), os.path.join(coutput_dir, filename)])
+
+
+def convert_all_jpegs():
+	dir_names = ["aerials", "misc", "sequences", "textures"]
+	out_dirs = ["55", "60", "65", "70", "75", "80", "85", "90", "95"]
+	rates = [55, 60, 65, 70, 75, 80, 85, 90, 95]
+
+	for i in range(4):
+		input_dir = "./images/" + dir_names[i]
+
+		for filename in os.listdir(input_dir):   #for every image in those folders
+			with Image.open(os.path.join(input_dir, filename)) as im:
+				jpeg_filename = os.path.splitext(filename)[0] + ".jpg"
+
+				for j in range(len(out_dirs)):
+					if not os.path.exists(os.path.join("jpegs", out_dirs[j], dir_names[i])):
+						os.mkdir(os.path.join("jpegs", out_dirs[j], dir_names[i]))
+					im.save(os.path.join("jpegs", out_dirs[j], dir_names[i], filename), 'JPEG', quality=50)
+
+
+
+# convert_all_jpegs()
+# one_image()
+
