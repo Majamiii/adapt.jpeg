@@ -7,6 +7,7 @@ import cv2
 import subprocess
 import os
 from PIL import Image
+from array import *
 
 def mse(imageA, imageB):
 	# the 'Mean Squared Error' between the two images is the
@@ -28,35 +29,88 @@ def compare_images(imageA, imageB):
 	# index for the images
 	m = mse(imageA, imageB)
 	s = ssim(imageA, imageB)
-	print("mse: ", m, "  ssim: ", s)
+
+	return m, s
 
 
-def one_image():
+def one_image(og, ad, jpg):
 
-	original = cv2.imread("testimg.bmp") #load imgs
-	adaptive = cv2.imread("doutput/b.bmp")
-	jpeg = cv2.imread("jpegs/70/b.jpg")
+	original = cv2.imread(og) #load imgs
+	adaptive = cv2.imread(ad)
+	jpeg = cv2.imread(jpg)
 
 	original = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY) #convert og to grayscale
 	adaptive = cv2.cvtColor(adaptive, cv2.COLOR_BGR2GRAY)
 	jpeg = cv2.cvtColor(jpeg, cv2.COLOR_BGR2GRAY)
 
+	adapt_m, adapt_s = compare_images(original, adaptive)
 
-	# compare the images
-	print("the lower the mse && the higher the ssim => imgs are more similar")
-	print()
-	print()
+	# the lower the mse && the higher the ssim => imgs are more similar
 
-	print("og vs og: ")
-	compare_images(original, original)
+	jpeg_m, jpeg_s = compare_images(original, jpeg)
 
-	print()
-	print("og vs adaptive jpeg: ")
-	compare_images(original, adaptive)
+	dif_m = jpeg_m - adapt_m
+	dif_s = adapt_s - jpeg_s
 
-	print()
-	print("og vs jpeg rate 70: ")
-	compare_images(original, jpeg)
+	# if both are positive it means that the adapt. is closer to the original than the jpeg of that rate
+
+	return dif_m, dif_s
+
+
+
+
+
+def comparison():
+
+	dir_names = ["aerials", "misc", "sequences", "textures"]
+
+	cntr = 0
+
+	mse_arr = list()
+	ssim_arr = list()
+
+	rate_dirs = ["55", "60", "65", "70", "75", "80", "85", "90", "95"]
+
+
+	for i in range(len(dir_names)):			#loop through all 4 folders
+
+		input_dir = "./doutput/" + dir_names[i]
+
+		for filename in os.listdir(input_dir):   #for every image in folders with images compressed with the adaptive jpeg
+				adapt_jpg = os.path.join(input_dir, filename)
+				original = os.path.join("./images", dir_names[i], filename)
+
+				for j in range(len(rate_dirs)):				#for every rate of regularly compressed jpegs
+					reg_jpg = os.path.join("jpegs", rate_dirs[j], dir_names[i], filename)
+
+					cntr = cntr + 1
+
+					m, s = one_image(original, adapt_jpg, reg_jpg)
+
+					mse_arr.append(m)
+					ssim_arr.append(s)
+					print(mse_arr[cntr-1])
+
+	# find_avgs(mse_arr, ssim_arr)
+
+
+	
+
+comparison()
+
+
+
+
+# CODE BELOW THIS POINT:
+# for new (de)compression when something is changed in libjpeg
+	
+# + regular jpeg compression (9 different rates)
+
+# basically getting the dataset ready for the comparisons
+
+
+
+
 
 
 
@@ -105,10 +159,6 @@ def convert_all_jpegs():
 				for j in range(len(out_dirs)):
 					if not os.path.exists(os.path.join("jpegs", out_dirs[j], dir_names[i])):
 						os.mkdir(os.path.join("jpegs", out_dirs[j], dir_names[i]))
-					im.save(os.path.join("jpegs", out_dirs[j], dir_names[i], filename), 'JPEG', quality=50)
+					im.save(os.path.join("jpegs", out_dirs[j], dir_names[i], filename), 'JPEG', quality=rates[j])
 
-
-
-# convert_all_jpegs()
-# one_image()
 
