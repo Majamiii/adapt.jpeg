@@ -59,18 +59,21 @@ def one_image(og, ad, jpg):
 
 
 
-def find_avgs(mse, ssim, size_arr):
+def find_avgs(mse, ssim, size1_arr, size2_arr, ogsize_arr):
 
 	print("mse = mean squared error, ssim = structural similarity")
 	print("the smaller the avg difference, more similar the new algorithm is to the og picture than that rate of jpeg compr")
-	print("size difference is sizeof(our new pic) - sizeof(regular jpeg)")
+	print("3) is [sizeof(tvojjpeg)+sizeof(fajl sa koeficijentima)]/sizeof(og bmp)size (in MB) ")
+	print("4) is sizeof(jpeg)/sizof(og bmp)")
 	print()
 
 	len_arr = int(len(mse)/9)
 
 	mse_values = list()
 	ssim_values = list()
-	size_values = list()
+	size1_values = list()
+	size2_values = list()
+	ogsize_values = list()
 
 	for rate_index in range(9):
 
@@ -78,14 +81,22 @@ def find_avgs(mse, ssim, size_arr):
 
 			mse_values.append(mse[num_el*9 + rate_index])
 			ssim_values.append(ssim[num_el*9 + rate_index])
-			size_values.append(size_arr[num_el*9 + rate_index])
+			size1_values.append(size1_arr[num_el*9 + rate_index])
+			size2_values.append(size2_arr[num_el*9 + rate_index])
+			ogsize_values.append(ogsize_arr[num_el*9 + rate_index])
 
 		mse_avg = round(mean(mse_values), 2)
 		ssim_avg = round(mean(ssim_values), 4)
-		size_avg = round(mean(size_values)/1000000, 4)
+		size1_avg = round(mean(size1_values), 4)
+		size2_avg = round(mean(size2_values), 4)
+		
+		ogsize_avg = round(mean(ogsize_values)/1000000, 2)
 
 		print("jpeg compression rate: ", 55+rate_index*5)
-		print("avg dif of:  1) MSE: ", mse_avg, "   2) SSIM: ", ssim_avg, "    3) size (in MB): ", size_avg)
+		print("1) MSE: jpeg - new alg: ", mse_avg, "   2) SSIM: new alg - jpeg: ", ssim_avg)  
+		print("3) relative size of new pic: ", size1_avg)
+		print("4) relative size of jpeg: ", size2_avg)
+		print("5) size of original [MB]: ", ogsize_avg)
 		print()
 
 
@@ -102,7 +113,10 @@ def comparison():
 	mse_arr = list()
 	ssim_arr = list()
 
-	size_arr = list()
+	size1_arr = list()
+	size2_arr = list()
+
+	ogsize_arr = list()
 
 	rate_dirs = ["55", "60", "65", "70", "75", "80", "85", "90", "95"]
 
@@ -110,30 +124,30 @@ def comparison():
 	for i in range(len(dir_names)):			#loop through all 4 folders
 
 		input_dir = "./doutput/" + dir_names[i]
+		cinput_dir = "./coutput/" + dir_names[i]
 
 		for filename in os.listdir(input_dir):   #for every image in folders with images compressed with the adaptive jpeg
-				adapt_jpg = os.path.join(input_dir, filename)
-				original = os.path.join("./images", dir_names[i], filename)
+				adapt_jpg = os.path.join(cinput_dir, filename)
+				original = os.path.join("./images", dir_names[i], filename[:-4] + ".bmp")
 
 				adapt_size = os.path.getsize(adapt_jpg)
-
-				# a_size_arr.append(adapt_size)
+				original_size = os.path.getsize(original)
 
 				for j in range(len(rate_dirs)):				#for every rate of regularly compressed jpegs
-					reg_jpg = os.path.join("jpegs", rate_dirs[j], dir_names[i], filename)
+					reg_jpg = os.path.join("jpeg_out", rate_dirs[j], dir_names[i], filename)
 
 					jpg_size = os.path.getsize(reg_jpg)
-					# jpg_size_arr.append(jpg_size)
-					size_arr.append(adapt_size - jpg_size)		#size_arr contains the difference between size of jpeg pic and new pic
+					size1_arr.append((adapt_size + os.path.getsize("./rates.txt")) / original_size)		#size_arr contains the difference between size of jpeg pic and new pic
+					size2_arr.append(jpg_size / original_size)
+
+					ogsize_arr.append(original_size)
 
 					m, s = one_image(original, adapt_jpg, reg_jpg)		#returns the difference between mses and ssims of adaptive and jpeg
 
 					mse_arr.append(m)
 					ssim_arr.append(s)
 
-		print("hi")
-
-	find_avgs(mse_arr, ssim_arr, size_arr)
+	find_avgs(mse_arr, ssim_arr, size1_arr, size2_arr, ogsize_arr)
 
 
 	
@@ -166,7 +180,7 @@ def make():
 
 
 def convert_my_alg():			#convert all the images from the dataset using the new, adaptive algorithm
-	make()
+	# make()
 
 	dir_names = ["aerials", "misc", "sequences", "textures"]
 	dir_imgs = "./images/"
@@ -175,15 +189,18 @@ def convert_my_alg():			#convert all the images from the dataset using the new, 
 		input_dir = dir_imgs + dir_names[i]
 		coutput_dir = "./coutput/" + dir_names[i]
 		doutput_dir = "./doutput/" + dir_names[i]
+		print("hi")
 
 		for filename in os.listdir(input_dir):   #for every image in those folders
 			with Image.open(os.path.join(input_dir, filename)) as im:
-				cfilename = os.path.splitext(filename)[0] + ".jpg"
-				dfilename = os.path.splitext(filename)[0] + ".bmp"
-				jpeg_filename = os.path.splitext(filename)[0] + ".jpg"
+
+				if not os.path.exists(os.path.join(coutput_dir)):
+					os.mkdir(os.path.join(coutput_dir))
+				if not os.path.exists(os.path.join(doutput_dir)):
+					os.mkdir(os.path.join(doutput_dir))
 				
-				subprocess.run(["cjpeg", "-grayscale", "-outfile", os.path.join(coutput_dir, filename), os.path.join(input_dir, filename)])
-				subprocess.run(["djpeg", "-bmp", "-outfile", os.path.join(doutput_dir, filename), os.path.join(coutput_dir, filename)])
+				subprocess.run(["cjpeg", "-grayscale", "-outfile", os.path.join(coutput_dir, filename[:-4] + ".jpg"), os.path.join(input_dir, filename)])
+				subprocess.run(["djpeg", "-outfile", os.path.join(doutput_dir, filename[:-4] + ".jpg"), os.path.join(coutput_dir, filename[:-4] + ".jpg")])
 
 
 def convert_all_jpegs():
@@ -195,10 +212,22 @@ def convert_all_jpegs():
 		input_dir = "./images/" + dir_names[i]
 
 		for filename in os.listdir(input_dir):   #for every image in those folders
+			
 			with Image.open(os.path.join(input_dir, filename)) as im:
-				jpeg_filename = os.path.splitext(filename)[0] + ".jpg"
 
 				for j in range(len(out_dirs)):
-					if not os.path.exists(os.path.join("jpegs", out_dirs[j], dir_names[i])):
-						os.mkdir(os.path.join("jpegs", out_dirs[j], dir_names[i]))
-					im.save(os.path.join("jpegs", out_dirs[j], dir_names[i], filename), 'JPEG', quality=rates[j])
+					
+					if not os.path.exists(os.path.join("jpeg_out", out_dirs[j])):
+						os.mkdir(os.path.join("jpeg_out", out_dirs[j]))
+
+					if not os.path.exists(os.path.join("jpeg_out", out_dirs[j], dir_names[i])):
+						os.mkdir(os.path.join("jpeg_out", out_dirs[j], dir_names[i]))
+
+					im.save(os.path.join("jpeg_out", out_dirs[j], dir_names[i], filename[:-4] + ".jpg"), 'JPEG', quality=rates[j])
+
+					if os.path.exists(os.path.join("jpeg_out", out_dirs[j], dir_names[i], filename)):					
+						os.remove(os.path.join("jpeg_out", out_dirs[j], dir_names[i], filename))
+
+
+# convert_my_alg()
+# convert_all_jpegs()

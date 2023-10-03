@@ -11,7 +11,7 @@ doutput/*
 example.bmp
 rates.txt
 warnings.txt
-jpegs/*
+# jpeg_out/*
 bmp2.bmp
 bmp3.bmp
 5.1.12magic.bmp
