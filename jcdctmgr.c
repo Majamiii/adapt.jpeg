@@ -82,6 +82,7 @@ typedef union {
 
 int num_of_lines = 0;
 int all_rates[100000];
+float max = 0;
 
 METHODDEF(void)
 forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
@@ -108,9 +109,10 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
       register int i;
       register JCOEFPTR output_ptr = coef_blocks[bi];
       
-      int quality;
+      int quality=0;
       float sum=0;
       float coefs[64];
+      float percent=0;
 
       for (i = 0; i < DCTSIZE2; i++) {
 	      
@@ -125,20 +127,22 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
 
         if((i == DCTSIZE2-1)&&(bi==0)) {
 
-          float percent = sum/43.69;
-          float thres = 45;
-          if(percent>thres) {
-            percent = thres;
-          }
-          percent /= thres/2;    //we get a number between 0 and 2
+          percent = sum/2796.16;
+          // percent /= thres/2;    //we get a number between 0 and 2
           
-          if(percent > 0.024) {                             //because log10(0) = -inf + the threshold is about 0.023
-            percent = (log10(percent*10) + 0.7)*25;      //log10(percent) is between 0 and 2 so the result is between 0 and 12.5
+          // if(percent > 0.024) {                             //because log10(0) = -inf + the threshold is about 0.023
+          //   percent = (log10(percent*10) + 0.7)*25;      //log10(percent) is between 0 and 2 so the result is between 0 and 12.5
+          // }
+          // else {
+          //   percent = 0;
+          // }
+         
+          if (percent>max) {
+            max = percent;
           }
-          else {
-            percent = 3;
-          }
-          quality = percent + 50;
+
+          quality = percent*25/max;
+          quality += 50;
 
           all_rates[num_of_lines] = quality;
           num_of_lines += 1;

@@ -96,8 +96,10 @@ def find_avgs(mse, ssim, size1_arr, size2_arr, ogsize_arr):
 		print("1) MSE: jpeg - new alg: ", mse_avg, "   2) SSIM: new alg - jpeg: ", ssim_avg)  
 		print("3) relative size of new pic: ", size1_avg)
 		print("4) relative size of jpeg: ", size2_avg)
-		print("5) size of original [MB]: ", ogsize_avg)
 		print()
+
+	
+	print("avg size of original [MB]: ", ogsize_avg)
 
 
 
@@ -152,7 +154,6 @@ def comparison():
 
 	
 
-comparison()
 
 
 
@@ -180,24 +181,42 @@ def make():
 
 
 def convert_my_alg():			#convert all the images from the dataset using the new, adaptive algorithm
-	# make()
+	make()
+	os.chdir("./build")
 
 	dir_names = ["aerials", "misc", "sequences", "textures"]
-	dir_imgs = "./images/"
+	dir_imgs = "../images/"
+
+	# subprocess.run(["cjpeg", "-outfile", "../coutput/aerials/2.1.01.jpg", "../images/aerials/2.1.01.bmp"])
+	# subprocess.run(["djpeg", "-outfile", "../doutput/aerials/2.1.01.jpg", "../coutput/aerials/2.1.01.jpg"])
 
 	for i in range(4):			#go through all 4 folders
 		input_dir = dir_imgs + dir_names[i]
-		coutput_dir = "./coutput/" + dir_names[i]
-		doutput_dir = "./doutput/" + dir_names[i]
+
+		if not os.path.exists("../coutput/"):
+			os.mkdir("../coutput/")
+		if not os.path.exists(os.path.join("../doutput/")):
+			os.mkdir(os.path.join("../doutput/"))
+
+		coutput_dir = "../coutput/" + dir_names[i]
+		doutput_dir = "../doutput/" + dir_names[i]
 		print("hi")
+
+		if not os.path.exists(coutput_dir):
+			os.mkdir(coutput_dir)
+		if not os.path.exists(os.path.join(doutput_dir)):
+			os.mkdir(os.path.join(doutput_dir))
 
 		for filename in os.listdir(input_dir):   #for every image in those folders
 			with Image.open(os.path.join(input_dir, filename)) as im:
 
-				if not os.path.exists(os.path.join(coutput_dir)):
-					os.mkdir(os.path.join(coutput_dir))
-				if not os.path.exists(os.path.join(doutput_dir)):
-					os.mkdir(os.path.join(doutput_dir))
+				if os.path.exists(os.path.join(coutput_dir, filename[:-4]+".jpg")):
+					os.remove(os.path.join(coutput_dir, filename[:-4]+".jpg"))
+				if os.path.exists(os.path.join(doutput_dir, filename[:-4]+".jpg")):
+					os.remove(os.path.join(doutput_dir, filename[:-4]+".jpg"))
+
+		for filename in os.listdir(input_dir):   #for every image in those folders
+			with Image.open(os.path.join(input_dir, filename)) as im:
 				
 				subprocess.run(["cjpeg", "-grayscale", "-outfile", os.path.join(coutput_dir, filename[:-4] + ".jpg"), os.path.join(input_dir, filename)])
 				subprocess.run(["djpeg", "-outfile", os.path.join(doutput_dir, filename[:-4] + ".jpg"), os.path.join(coutput_dir, filename[:-4] + ".jpg")])
@@ -228,6 +247,8 @@ def convert_all_jpegs():
 					if os.path.exists(os.path.join("jpeg_out", out_dirs[j], dir_names[i], filename)):					
 						os.remove(os.path.join("jpeg_out", out_dirs[j], dir_names[i], filename))
 
+
+comparison()
 
 # convert_my_alg()
 # convert_all_jpegs()

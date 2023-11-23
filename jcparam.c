@@ -137,13 +137,13 @@ jpeg_quality_scaling (int quality)
    * to make all the table entries 1 (hence, minimum quantization loss).
    * Qualities 1..50 are converted to scaling percentage 5000/Q.
    */
-  /*
+  
   if (quality < 50)
     quality = 5000 / quality;
   else
     quality = 200 - quality*2;
-*/
-  quality = 100;
+
+  // quality = 100;
   return quality;
 }
 
@@ -219,7 +219,7 @@ jpeg_set_defaults (j_compress_ptr cinfo)
   cinfo->scale_denom = 1;
   cinfo->data_precision = BITS_IN_JSAMPLE;
   /* Set up two quantization tables using default quality of 75 */
-  jpeg_set_quality(cinfo, 100, TRUE);
+  jpeg_set_quality(cinfo, 75, TRUE);
   /* Reset standard Huffman tables */
   std_huff_tables(cinfo);
 
