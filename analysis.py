@@ -62,9 +62,9 @@ def one_image(og, ad, jpg):
 def find_avgs(mse, ssim, size1_arr, size2_arr, ogsize_arr):
 
 	print("mse = mean squared error, ssim = structural similarity")
-	print("the smaller the avg difference, more similar the new algorithm is to the og picture than that rate of jpeg compr")
+	print("the bigger the avg difference the better, should be positive for positive results")
 	print("3) is [sizeof(tvojjpeg)+sizeof(fajl sa koeficijentima)]/sizeof(og bmp)size (in MB) ")
-	print("4) is sizeof(jpeg)/sizof(og bmp)")
+	print("4) is sizeof(jpeg)/sizeof(og bmp)")
 	print()
 
 	len_arr = int(len(mse)/9)
@@ -111,6 +111,7 @@ def find_avgs(mse, ssim, size1_arr, size2_arr, ogsize_arr):
 def comparison():
 
 	dir_names = ["aerials", "misc", "sequences", "textures"]
+	# dir_names = ["aerials"]
 
 	mse_arr = list()
 	ssim_arr = list()
@@ -125,12 +126,17 @@ def comparison():
 
 	for i in range(len(dir_names)):			#loop through all 4 folders
 
-		input_dir = "./doutput/" + dir_names[i]
-		cinput_dir = "./coutput/" + dir_names[i]
+		print(os.getcwd())
 
-		for filename in os.listdir(input_dir):   #for every image in folders with images compressed with the adaptive jpeg
+		input_dir = os.path.join(os.getcwd(), "doutput", dir_names[i])
+		cinput_dir = os.path.join(os.getcwd(), "coutput", dir_names[i])
+
+		for filename in os.listdir(cinput_dir):   #for every image in folders with images compressed with the adaptive jpeg
+				filename = filename[:-4]+".jpg"
+				adapt_bmp = os.path.join(input_dir, filename[:-4]+".bmp")
 				adapt_jpg = os.path.join(cinput_dir, filename)
-				original = os.path.join("./images", dir_names[i], filename[:-4] + ".bmp")
+
+				original = os.path.join("images", dir_names[i], filename[:-4]+".bmp")
 
 				adapt_size = os.path.getsize(adapt_jpg)
 				original_size = os.path.getsize(original)
@@ -139,12 +145,12 @@ def comparison():
 					reg_jpg = os.path.join("jpeg_out", rate_dirs[j], dir_names[i], filename)
 
 					jpg_size = os.path.getsize(reg_jpg)
-					size1_arr.append((adapt_size + os.path.getsize("./rates.txt")) / original_size)		#size_arr contains the difference between size of jpeg pic and new pic
+					size1_arr.append((adapt_size + os.path.getsize("rates.txt")) / original_size)		#size_arr contains the difference between size of jpeg pic and new pic
 					size2_arr.append(jpg_size / original_size)
 
 					ogsize_arr.append(original_size)
 
-					m, s = one_image(original, adapt_jpg, reg_jpg)		#returns the difference between mses and ssims of adaptive and jpeg
+					m, s = one_image(original, adapt_bmp, reg_jpg)		#returns the difference between mses and ssims of adaptive and jpeg
 
 					mse_arr.append(m)
 					ssim_arr.append(s)
@@ -181,25 +187,29 @@ def make():
 
 
 def convert_my_alg():			#convert all the images from the dataset using the new, adaptive algorithm
-	make()
-	os.chdir("./build")
+
+	# make()
+	# print("made!")
+
+
+	# # os.chdir(os.path.join(os.getcwd(), "build"))
+	# print(os.getcwd())
+
+	# subprocess.run(["./cjpeg", "-grayscale", "-outfile", "../aacomp.jpg", "../testimg.bmp"])
+	# subprocess.run(["./djpeg", "-bmp", "-outfile", "../aadecomp.bmp", "../aacomp.jpg"])
 
 	dir_names = ["aerials", "misc", "sequences", "textures"]
-	dir_imgs = "../images/"
-
-	# subprocess.run(["cjpeg", "-outfile", "../coutput/aerials/2.1.01.jpg", "../images/aerials/2.1.01.bmp"])
-	# subprocess.run(["djpeg", "-outfile", "../doutput/aerials/2.1.01.jpg", "../coutput/aerials/2.1.01.jpg"])
 
 	for i in range(4):			#go through all 4 folders
-		input_dir = dir_imgs + dir_names[i]
+		input_dir = os.path.join(os.getcwd(), "images", dir_names[i])
 
-		if not os.path.exists("../coutput/"):
-			os.mkdir("../coutput/")
-		if not os.path.exists(os.path.join("../doutput/")):
-			os.mkdir(os.path.join("../doutput/"))
+		if not os.path.exists(os.path.join(os.getcwd(), "coutput")):
+			os.mkdir(os.path.join(os.getcwd(), "coutput"))
+		if not os.path.exists(os.path.join(os.getcwd(), "doutput")):
+			os.mkdir(os.path.join(os.getcwd(), "doutput"))
 
-		coutput_dir = "../coutput/" + dir_names[i]
-		doutput_dir = "../doutput/" + dir_names[i]
+		coutput_dir = os.path.join(os.getcwd(), "coutput", dir_names[i])
+		doutput_dir = os.path.join(os.getcwd(), "doutput", dir_names[i])
 		print("hi")
 
 		if not os.path.exists(coutput_dir):
@@ -212,14 +222,28 @@ def convert_my_alg():			#convert all the images from the dataset using the new, 
 
 				if os.path.exists(os.path.join(coutput_dir, filename[:-4]+".jpg")):
 					os.remove(os.path.join(coutput_dir, filename[:-4]+".jpg"))
+				
+				if os.path.exists(os.path.join(coutput_dir, filename[:-4]+".bmp")):
+					os.remove(os.path.join(coutput_dir, filename[:-4]+".bmp"))
+
 				if os.path.exists(os.path.join(doutput_dir, filename[:-4]+".jpg")):
 					os.remove(os.path.join(doutput_dir, filename[:-4]+".jpg"))
+				if os.path.exists(os.path.join(doutput_dir, filename[:-4]+".bmp")):
+					os.remove(os.path.join(doutput_dir, filename[:-4]+".bmp"))
+
+		os.chdir(os.path.join(os.getcwd(), "build"))
 
 		for filename in os.listdir(input_dir):   #for every image in those folders
 			with Image.open(os.path.join(input_dir, filename)) as im:
 				
-				subprocess.run(["cjpeg", "-grayscale", "-outfile", os.path.join(coutput_dir, filename[:-4] + ".jpg"), os.path.join(input_dir, filename)])
-				subprocess.run(["djpeg", "-outfile", os.path.join(doutput_dir, filename[:-4] + ".jpg"), os.path.join(coutput_dir, filename[:-4] + ".jpg")])
+				subprocess.run(["./cjpeg", "-grayscale", "-outfile", os.path.join("..", "coutput", dir_names[i], filename[:-4] + ".jpg"), os.path.join(input_dir, filename)])
+				subprocess.run(["./djpeg", "-bmp", "-outfile", os.path.join("..", "doutput", dir_names[i], filename[:-4] + ".bmp"), os.path.join("..", "coutput", dir_names[i], filename[:-4] + ".jpg")])
+		os.chdir("..")
+
+		os.chdir(doutput_dir)
+		subprocess.run(["mogrify", "-format", "bmp", "-define", "bmp:format=bmp3", "*.bmp"])
+		os.chdir("..")
+		os.chdir("..")
 
 
 def convert_all_jpegs():
@@ -248,7 +272,8 @@ def convert_all_jpegs():
 						os.remove(os.path.join("jpeg_out", out_dirs[j], dir_names[i], filename))
 
 
-comparison()
-
-# convert_my_alg()
+make()
+convert_my_alg()
 # convert_all_jpegs()
+
+comparison()

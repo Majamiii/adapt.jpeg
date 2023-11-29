@@ -143,7 +143,7 @@ jpeg_quality_scaling (int quality)
   else
     quality = 200 - quality*2;
 
-  // quality = 100;
+  quality = 100;
   return quality;
 }
 

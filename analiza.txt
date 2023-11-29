@@ -1,0 +1,113 @@
+50/50
+
+mse = mean squared error, ssim = structural similarity
+the bigger the avg difference the better, should be positive for positive results
+3) is [sizeof(tvojjpeg)+sizeof(fajl sa koeficijentima)]/sizeof(og bmp)size (in MB) 
+4) is sizeof(jpeg)/sizeof(og bmp)
+
+jpeg compression rate:  55
+1) MSE: jpeg - new alg:  -63.98    2) SSIM: new alg - jpeg:  -0.0281
+3) relative size of new pic:  0.065
+4) relative size of jpeg:  0.0488
+
+jpeg compression rate:  60
+1) MSE: jpeg - new alg:  -66.1    2) SSIM: new alg - jpeg:  -0.0307
+3) relative size of new pic:  0.065
+4) relative size of jpeg:  0.0506
+
+jpeg compression rate:  65
+1) MSE: jpeg - new alg:  -68.31    2) SSIM: new alg - jpeg:  -0.0334
+3) relative size of new pic:  0.065
+4) relative size of jpeg:  0.0526
+
+jpeg compression rate:  70
+1) MSE: jpeg - new alg:  -70.64    2) SSIM: new alg - jpeg:  -0.0363
+3) relative size of new pic:  0.065
+4) relative size of jpeg:  0.055
+
+jpeg compression rate:  75
+1) MSE: jpeg - new alg:  -73.0    2) SSIM: new alg - jpeg:  -0.0393
+3) relative size of new pic:  0.065
+4) relative size of jpeg:  0.0576
+
+jpeg compression rate:  80
+1) MSE: jpeg - new alg:  -75.51    2) SSIM: new alg - jpeg:  -0.0426
+3) relative size of new pic:  0.065
+4) relative size of jpeg:  0.061
+
+jpeg compression rate:  85
+1) MSE: jpeg - new alg:  -78.13    2) SSIM: new alg - jpeg:  -0.0463
+3) relative size of new pic:  0.065
+4) relative size of jpeg:  0.0653
+
+jpeg compression rate:  90
+1) MSE: jpeg - new alg:  -80.85    2) SSIM: new alg - jpeg:  -0.0504
+3) relative size of new pic:  0.065
+4) relative size of jpeg:  0.0715
+
+jpeg compression rate:  95
+1) MSE: jpeg - new alg:  -83.59    2) SSIM: new alg - jpeg:  -0.0552
+3) relative size of new pic:  0.065
+4) relative size of jpeg:  0.0815
+
+avg size of original [MB]:  1.25
+
+
+
+
+70-90
+
+jpeg compression rate:  55
+1) MSE: jpeg - new alg:  -62.78    2) SSIM: new alg - jpeg:  -0.0234
+3) relative size of new pic:  0.0665
+4) relative size of jpeg:  0.0488
+
+jpeg compression rate:  60
+1) MSE: jpeg - new alg:  -64.9    2) SSIM: new alg - jpeg:  -0.026
+3) relative size of new pic:  0.0665
+4) relative size of jpeg:  0.0506
+
+jpeg compression rate:  65
+1) MSE: jpeg - new alg:  -67.11    2) SSIM: new alg - jpeg:  -0.0287
+3) relative size of new pic:  0.0665
+4) relative size of jpeg:  0.0526
+
+jpeg compression rate:  70
+1) MSE: jpeg - new alg:  -69.43    2) SSIM: new alg - jpeg:  -0.0316
+3) relative size of new pic:  0.0665
+4) relative size of jpeg:  0.055
+
+jpeg compression rate:  75
+1) MSE: jpeg - new alg:  -71.8    2) SSIM: new alg - jpeg:  -0.0346
+3) relative size of new pic:  0.0665
+4) relative size of jpeg:  0.0576
+
+jpeg compression rate:  80
+1) MSE: jpeg - new alg:  -74.31    2) SSIM: new alg - jpeg:  -0.0379
+3) relative size of new pic:  0.0665
+4) relative size of jpeg:  0.061
+
+jpeg compression rate:  85
+1) MSE: jpeg - new alg:  -76.93    2) SSIM: new alg - jpeg:  -0.0415
+3) relative size of new pic:  0.0665
+4) relative size of jpeg:  0.0653
+
+jpeg compression rate:  90
+1) MSE: jpeg - new alg:  -79.65    2) SSIM: new alg - jpeg:  -0.0457
+3) relative size of new pic:  0.0665
+4) relative size of jpeg:  0.0715
+
+jpeg compression rate:  95
+1) MSE: jpeg - new alg:  -82.39    2) SSIM: new alg - jpeg:  -0.0504
+3) relative size of new pic:  0.0665
+4) relative size of jpeg:  0.0815
+
+avg size of original [MB]:  1.25
+
+
+
+
+
+
+
+20-100 isto nikako

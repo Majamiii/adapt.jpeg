@@ -109,14 +109,37 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
       register int i;
       register JCOEFPTR output_ptr = coef_blocks[bi];
       
-      int quality=0;
+      int quality;
       float sum=0;
       float coefs[64];
-      float percent=0;
+      float percent;
 
       for (i = 0; i < DCTSIZE2; i++) {
 	      
-        coefs[i] = changed_coefs(i, workspace[i]);
+        // coefs[i] = changed_coefs(i, workspace[i]);
+
+        int index = i;
+        int num = workspace[i];
+
+        int broj=0;
+        int k=0;
+        int j=0;
+        int scale[64];
+        for (int m=0; m<64; m++, j++) {                 //making an array like 1 2 3 4 5 6 7 8 2 3 4 5 6 7 8 9 3 4 5 6 7 8 9 10 ,... so the
+                                                        //diagonalls would have the same number to scale the coefs
+            scale[m] = j+1;
+
+            if(j==k+7) {
+                j=j-7;
+                k = k+1;
+            }
+        }
+
+        float n = num * scale[index];
+            
+        coefs[i] = n/15;
+
+
 
         if(coefs[i] >= 0) {
           sum += coefs[i];
@@ -125,30 +148,22 @@ forward_DCT (j_compress_ptr cinfo, jpeg_component_info * compptr,
           sum -= coefs[i];
         }
 
-        if((i == DCTSIZE2-1)&&(bi==0)) {
+        if(i == DCTSIZE2-1) {
 
           percent = sum/2796.16;
-          // percent /= thres/2;    //we get a number between 0 and 2
-          
-          // if(percent > 0.024) {                             //because log10(0) = -inf + the threshold is about 0.023
-          //   percent = (log10(percent*10) + 0.7)*25;      //log10(percent) is between 0 and 2 so the result is between 0 and 12.5
-          // }
-          // else {
-          //   percent = 0;
-          // }
          
           if (percent>max) {
             max = percent;
           }
 
-          quality = percent*25/max;
-          quality += 50;
-
-          all_rates[num_of_lines] = quality;
-          num_of_lines += 1;
+          quality = percent*80/max;
+          // printf("%i   ", quality);
+          quality += 20;
 
           fprintf(fptr, "%i\n", quality);
 
+          all_rates[num_of_lines] = quality;
+          num_of_lines += 1;
         }
       }
 
